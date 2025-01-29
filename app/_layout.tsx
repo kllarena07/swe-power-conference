@@ -6,9 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import "./global.css"
-
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from "@/components/useColorScheme";
+import "../global.css";
 
 export {
   // Catch any errors thrown by the Layout component.
