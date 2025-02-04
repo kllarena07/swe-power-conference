@@ -8,11 +8,15 @@ import { Link } from 'expo-router'
 const index = () => {
   return (
 
-    <View style={styles.container} className="flex-1 items-center justify-center text-center">
+    <View className="bg-rich-plum flex-1 items-center justify-center text-center">
       <Image source={powerTitleImg} style={styles.image}/>
 
       <Text style={styles.welcome} className="text-center">Welcome to UMD'S 2025 Power Conference</Text>
-      <Text style={styles.subtext} className="text-center">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium illum labore at amet dolorum delectus cupiditate vero eveniet, distinctio ab quam eum et est voluptate earum optio nostrum eius corrupti?</Text>
+      <Text style={styles.subtext} className="text-center">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+        Praesentium illum labore at amet dolorum delectus cupiditate vero eveniet, 
+        distinctio ab quam eum et est voluptate earum optio nostrum eius corrupti?
+      </Text>
 
 
       <Link href="/signup" asChild>
@@ -34,9 +38,6 @@ const index = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#82599a', // Set the background color here
-  },
   welcome: {
     color: '#ebcac6',
     fontFamily: 'Kurale',
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     width: 290,
     height: 89,
-    transform: [{ translateY: -70 }]
+    top: -50
   },
   image: {
     width: 367,
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     width: 309,
     height: 51,
     justifyContent: 'center',
-    transform: [{ translateY: -60 }]
+    transform: [{ translateY: -10 }]
   },
   signInButtonText: {
     color: '#82599a',
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     width: 309,
     height: 51,
     justifyContent: 'center',
-    transform: [{ translateY: -60 }]
+    transform: [{ translateY: -10 }]
   },
   logInButtonText: {
     color: '#ece5d7',
