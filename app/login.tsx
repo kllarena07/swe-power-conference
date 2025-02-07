@@ -1,10 +1,47 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, TextInput, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Link } from "expo-router";
-// import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
+
+function Header() {
+  return (
+    <View className="flex-row justify-between w-full py-3 px-5 items-center">
+      <Link href="/">
+        <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
+      </Link>
+      <Text className="font-bold text-3xl">Login</Text>
+      <Link href="/signup" className="text-rich-plum text-base">
+        Sign Up
+      </Link>
+    </View>
+  );
+}
+
+function LoginButton({
+  handleLogin,
+}: {
+  handleLogin: () => void;
+}): JSX.Element {
+  return (
+    <TouchableOpacity
+      onPress={handleLogin}
+      className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
+    >
+      <Text className="text-white text-base font-bold">Login</Text>
+    </TouchableOpacity>
+  );
+}
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -13,48 +50,40 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView className="items-center justify-center text-center">
-      <View className="flex-row left-8 my-2">
-        <Text className="font-bold text-3xl mb-5">Log In</Text>
-        <Link href="/signup" className="left-24 text-rich-plum text-base">
-          Sign Up
-        </Link>
-      </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="items-center h-full">
+        <Header />
+        <View className="gap-5 w-full px-5">
+          <TextInput
+            className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+            placeholderTextColor="#bdbdbd"
+            textAlignVertical="center"
+          />
 
-      <View className="w-4/5 mb-6">
-        <TextInput
-          className="h-12 rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          placeholder="Username"
-          placeholderTextColor="#bdbdbd"
-        />
-      </View>
+          <TextInput
+            className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            placeholder="Password"
+            placeholderTextColor="#bdbdbd"
+            secureTextEntry
+            textAlignVertical="center"
+          />
 
-      <View className="w-4/5 mb-6">
-        <TextInput
-          className="h-12 rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholder="Password"
-          placeholderTextColor="#bdbdbd"
-          secureTextEntry
-        />
-      </View>
-
-      <View className="flex-row my-3">
-        <Text className="mr-2">Forgot Password?</Text>
-        <Text className="text-rich-plum">Reset Here</Text>
-      </View>
-
-      <View className="justify-center items-center mb-20">
-        <Pressable
-          onPress={handleLogin}
-          className="items-center justify-center bg-rich-plum h-14 w-96 rounded-lg top-4 p-2"
-        >
-          <Text className="text-white text-base font-bold">Log In</Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
+          <View className="my-3 opacity-50">
+            <Text className="text-center">
+              Forgot Password?{" "}
+              <Link href="/" className="text-rich-plum">
+                Reset Here
+              </Link>
+            </Text>
+          </View>
+          <LoginButton handleLogin={handleLogin} />
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
