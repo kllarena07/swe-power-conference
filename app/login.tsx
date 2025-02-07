@@ -53,9 +53,9 @@ export default function Login() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView className="items-center h-full">
         <Header />
-        <View className="gap-5 w-full px-5">
+        <View className="gap-5 w-full px-5 pt-5">
           <TextInput
-            className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
@@ -65,7 +65,7 @@ export default function Login() {
 
           <View className="relative">
             <TextInput
-              className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg pr-12"
+              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg pr-12"
               value={password}
               onChangeText={(text) => setPassword(text)}
               placeholder="Password"
@@ -75,7 +75,7 @@ export default function Login() {
             />
             <TouchableOpacity
               onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              className="absolute right-4 top-3"
+              className="absolute right-4 top-5"
             >
               <MaterialIcons
                 name={isPasswordVisible ? "visibility" : "visibility-off"}
