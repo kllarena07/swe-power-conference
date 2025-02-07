@@ -63,15 +63,27 @@ export default function Login() {
             textAlignVertical="center"
           />
 
-          <TextInput
-            className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            placeholder="Password"
-            placeholderTextColor="#bdbdbd"
-            secureTextEntry
-            textAlignVertical="center"
-          />
+          <View className="relative">
+            <TextInput
+              className="rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg pr-12"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              placeholder="Password"
+              placeholderTextColor="#bdbdbd"
+              secureTextEntry={!isPasswordVisible}
+              textAlignVertical="center"
+            />
+            <TouchableOpacity
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              className="absolute right-4 top-3"
+            >
+              <MaterialIcons
+                name={isPasswordVisible ? "visibility" : "visibility-off"}
+                size={24}
+                color="hsla(0, 0%, 74%, 1)"
+              />
+            </TouchableOpacity>
+          </View>
 
           <View className="my-3 opacity-50">
             <Text className="text-center">
