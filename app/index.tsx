@@ -1,4 +1,4 @@
-import { SafeAreaView, StatusBar, Text } from "react-native";
+import { SafeAreaView, Text } from "react-native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native";
@@ -7,7 +7,6 @@ import { Link } from "expo-router";
 export default function Index() {
   return (
     <SafeAreaView className="bg-rich-plum flex-1 items-center justify-center text-center">
-      <StatusBar barStyle="light-content" />
       <Image
         source={require("@/assets/images/powertitle.png")}
         style={styles.image}
