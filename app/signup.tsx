@@ -1,21 +1,23 @@
-import React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import React, { useState } from "react";
+import { SafeAreaView, View, Text, TextInput, Pressable } from "react-native";
+import { Link } from "expo-router";
 
-const Signup = () => {
-  const [ username, setUsername ] = React.useState('');
-  const [ password, setPassword ] = React.useState('');
-  const [ email, setEmail ] = React.useState('');
+export default function SignUp() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSignup = () => {
     // Handle signup logic here
   };
 
   return (
-    <View className="items-center justify-center text-center">
+    <SafeAreaView className="items-center justify-center text-center">
       <View className="flex-row left-8 my-2">
         <Text className="font-bold text-3xl">Sign Up</Text>
-        <Link href="/login" className="left-24 text-rich-plum text-base">Login</Link>
+        <Link href="/login" className="left-24 text-rich-plum text-base">
+          Login
+        </Link>
       </View>
 
       <View className="w-4/5 mb-6">
@@ -50,12 +52,13 @@ const Signup = () => {
       </View>
 
       <View className="justify-center items-center mb-20">
-        <Pressable onPress={handleSignup} className="items-center justify-center bg-rich-plum h-14 w-96 rounded-lg top-4 p-2">
+        <Pressable
+          onPress={handleSignup}
+          className="items-center justify-center bg-rich-plum h-14 w-96 rounded-lg top-4 p-2"
+        >
           <Text className="text-white text-base font-bold">Sign Up</Text>
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
-};
-
-export default Signup;
+}
