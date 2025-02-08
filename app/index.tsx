@@ -1,4 +1,4 @@
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native";
@@ -6,41 +6,45 @@ import { Link } from "expo-router";
 
 export default function Index() {
   return (
-    <SafeAreaView className="bg-rich-plum flex-1 items-center justify-center text-center">
-      <Image
-        source={require("@/assets/images/powertitle.png")}
-        style={styles.image}
-      />
+    <SafeAreaView className="bg-rich-plum h-full flex gap-2">
+      <View className="flex items-center px-5 text-center">
+        <View>
+          <Image source={require("@/assets/images/powertitle.png")} />
+        </View>
 
-      <Text style={styles.welcome} className="text-center">
-        Welcome to UMD'S 2025 Power Conference
-      </Text>
-      <Text style={styles.subtext} className="text-center">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium
-        illum labore at amet dolorum delectus cupiditate vero eveniet,
-        distinctio ab quam eum et est voluptate earum optio nostrum eius
-        corrupti?
-      </Text>
+        <View>
+          <Text className="text-center text-[#ebcac6] text-3xl font-[Kurale]">
+            Welcome to UMD'S {"\n"} 2025 Power Conference
+          </Text>
 
-      <Link href="/signup" style={styles.signInButton}>
-        <Text style={styles.signInButtonText}>Sign Up</Text>
-      </Link>
+          <Text className="text-center text-[hsla(6,48%,85%,1)]">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+            Praesentium illum labore at amet dolorum delectus cupiditate vero
+            eveniet, distinctio ab quam eum et est voluptate earum optio nostrum
+            eius corrupti?
+          </Text>
+        </View>
 
-      <Link href="/login" style={styles.logInButton}>
-        <Text style={styles.logInButtonText}>Log In</Text>
-      </Link>
+        <View className="w-full gap-5">
+          <Link
+            href="/signup"
+            className="p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold"
+          >
+            Sign Up
+          </Link>
+          <Link
+            href="/login"
+            className="p-5 border-4 rounded-lg border-[hsla(40,36%,88%,1)] text-[hsla(40,36%,88%,1)] font-bold text-center"
+          >
+            Login
+          </Link>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  welcome: {
-    color: "#ebcac6",
-    fontFamily: "Kurale",
-    fontSize: 24,
-    width: 333,
-    height: 144,
-  },
   subtext: {
     color: "#ebcac6",
     fontFamily: "Kurale",
