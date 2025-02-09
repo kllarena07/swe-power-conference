@@ -1,64 +1,103 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, TextInput, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Link } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
+
+function Header() {
+  return (
+    <View className="flex-row justify-between w-full py-3 px-5 items-center">
+      <Link href="/">
+        <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
+      </Link>
+      <Text className="font-bold text-3xl">Sign Up</Text>
+      <Link href="/login" className="text-rich-plum text-base">
+        Login
+      </Link>
+    </View>
+  );
+}
+
+function SignUpButton({
+  handleSignUp,
+}: {
+  handleSignUp: () => void;
+}): JSX.Element {
+  return (
+    <TouchableOpacity
+      onPress={handleSignUp}
+      className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
+    >
+      <Text className="text-white text-xl font-bold">Sign Up</Text>
+    </TouchableOpacity>
+  );
+}
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const handleSignup = () => {
-    // Handle signup logic here
+  const handleSignUp = () => {
+    // Handle login logic here
   };
 
   return (
-    <SafeAreaView className="items-center justify-center text-center">
-      <View className="flex-row left-8 my-2">
-        <Text className="font-bold text-3xl">Sign Up</Text>
-        <Link href="/login" className="left-24 text-rich-plum text-base">
-          Login
-        </Link>
-      </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="items-center h-full">
+        <Header />
+        <View className="gap-5 w-full px-5 pt-5">
+          <TextInput
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+            placeholder="Username"
+            placeholderTextColor="#bdbdbd"
+            textAlignVertical="center"
+          />
 
-      <View className="w-4/5 mb-6">
-        <TextInput
-          className="h-12 rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          placeholder="Name"
-          placeholderTextColor="#bdbdbd"
-        />
-      </View>
+          <TextInput
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+            placeholderTextColor="#bdbdbd"
+            textAlignVertical="center"
+          />
 
-      <View className="w-4/5 mb-6">
-        <TextInput
-          className="h-12 rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          placeholder="Email"
-          placeholderTextColor="#bdbdbd"
-        />
-      </View>
+          <View className="relative">
+            <TextInput
+              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg pr-12"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              placeholder="Password"
+              placeholderTextColor="#bdbdbd"
+              secureTextEntry={!isPasswordVisible}
+              textAlignVertical="center"
+            />
+            <TouchableOpacity
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              className="absolute right-4 top-5"
+            >
+              <MaterialIcons
+                name={isPasswordVisible ? "visibility" : "visibility-off"}
+                size={24}
+                color="hsla(0, 0%, 74%, 1)"
+              />
+            </TouchableOpacity>
+          </View>
 
-      <View className="w-4/5 mb-6">
-        <TextInput
-          className="h-12 rounded-lg p-2.5 bg-light-gray border border-gray-300 text-lg"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholder="Password"
-          placeholderTextColor="#bdbdbd"
-          secureTextEntry
-        />
-      </View>
-
-      <View className="justify-center items-center mb-20">
-        <Pressable
-          onPress={handleSignup}
-          className="items-center justify-center bg-rich-plum h-14 w-96 rounded-lg top-4 p-2"
-        >
-          <Text className="text-white text-base font-bold">Sign Up</Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
+          <SignUpButton handleSignUp={handleSignUp} />
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
