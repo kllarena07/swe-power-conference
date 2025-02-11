@@ -35,7 +35,7 @@ function LoginButton({
       onPress={handleLogin}
       className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
     >
-      <Text className="text-white text-base font-bold">Login</Text>
+      <Text className="text-white text-xl font-bold">Login</Text>
     </TouchableOpacity>
   );
 }
@@ -85,7 +85,7 @@ export default function Login() {
             </TouchableOpacity>
           </View>
 
-          <View className="my-3 opacity-50">
+          <View className="opacity-50">
             <Text className="text-center">
               Forgot Password?{" "}
               <Link href="/" className="text-rich-plum">
