@@ -24,6 +24,7 @@ export default function Index() {
       >
         Sign Up
       </Link>
+      <Link href="/main/(tabs)/messages">Messages</Link>
       <Link
         href="/login"
         className="p-5 border-4 rounded-lg border-[hsla(40,36%,88%,1)] text-[hsla(40,36%,88%,1)] font-bold text-center text-xl"
