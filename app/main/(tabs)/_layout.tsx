@@ -13,12 +13,12 @@ export default function TabLayout() {
         },
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="index"
         options={{
           tabBarLabel: "",
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="messages"
         options={{
@@ -33,9 +33,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="signup"
+        name="profile"
         options={{
           tabBarLabel: "",
+          tabBarIcon: () => (
+            <MaterialIcons
+              name="person-outline"
+              size={32}
+              color="hsla(278, 41%, 74%, 1)"
+            />
+          ),
         }}
       />
     </Tabs>
