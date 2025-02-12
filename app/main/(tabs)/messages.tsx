@@ -33,7 +33,7 @@ export default function Messages() {
   };
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView className="relative">
       {isModalVisible ? (
         <GestureDetector gesture={tap}>
           <TouchableOpacity
@@ -127,6 +127,7 @@ export default function Messages() {
           </ScrollView>
         </SafeAreaView>
       </View>
+      <View className="absolute bottom-0 left-0 bg-[hsla(278,41%,74%,1)] w-1/3 h-[1.5px]" />
     </GestureHandlerRootView>
   );
 }
