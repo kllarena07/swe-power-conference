@@ -1,8 +1,17 @@
-import React from "react";
+import { useState } from "react";
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { StatusBar } from "react-native";
 
 export default function TabLayout() {
+  const [activeRoute, setActiveRoute] = useState("");
+
+  const getIconColor = (routeName: string) => {
+    return activeRoute === routeName
+      ? "hsla(278, 41%, 74%, 1)"
+      : "hsla(0, 0%, 74%, 1)";
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -12,13 +21,18 @@ export default function TabLayout() {
           backgroundColor: "hsla(0, 0%, 98%, 1)",
         },
       }}
+      screenListeners={{
+        state: (e) => {
+          const routeName = e.data.state.routes[e.data.state.index].name;
+
+          const theme =
+            routeName === "profile" ? "light-content" : "dark-content";
+
+          StatusBar.setBarStyle(theme);
+          setActiveRoute(routeName);
+        },
+      }}
     >
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          tabBarLabel: "",
-        }}
-      /> */}
       <Tabs.Screen
         name="messages"
         options={{
@@ -27,7 +41,20 @@ export default function TabLayout() {
             <MaterialIcons
               name="mail-outline"
               size={32}
-              color="hsla(278, 41%, 74%, 1)"
+              color={getIconColor("messages")}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarLabel: "",
+          tabBarIcon: () => (
+            <MaterialIcons
+              name="alarm"
+              size={32}
+              color={getIconColor("index")}
             />
           ),
         }}
@@ -40,7 +67,7 @@ export default function TabLayout() {
             <MaterialIcons
               name="person-outline"
               size={32}
-              color="hsla(278, 41%, 74%, 1)"
+              color={getIconColor("profile")}
             />
           ),
         }}
