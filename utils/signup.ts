@@ -1,3 +1,4 @@
+import { Href } from "expo-router";
 import { supabase } from "./supabase";
 
 export type SignUpActionProps = {
@@ -6,14 +7,23 @@ export type SignUpActionProps = {
   password: string;
 };
 
+export type SignUpRedirect = {
+  type: "error" | "success";
+  path: Href;
+  message: string;
+};
+
 export const signUpAction = async ({
   name,
   email,
   password,
-}: SignUpActionProps) => {
+}: SignUpActionProps): Promise<SignUpRedirect> => {
   if (!email || !password) {
-    console.error("Email and password are required");
-    return;
+    return {
+      type: "error",
+      path: "/signup",
+      message: "Email and password are required",
+    };
   }
 
   const { error } = await supabase.auth.signUp({
@@ -28,10 +38,17 @@ export const signUpAction = async ({
   });
 
   if (error) {
-    console.error(error.code + " " + error.message);
+    return {
+      type: "error",
+      path: "/signup",
+      message: error.message,
+    };
   } else {
-    console.log(
-      "Thanks for signing up! Please check your email for a verification link."
-    );
+    return {
+      type: "success",
+      path: "/login",
+      message:
+        "Thanks for signing up! Please check your email for a verification link.",
+    };
   }
 };

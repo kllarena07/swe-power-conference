@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacityProps,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { signUpAction, SignUpActionProps } from "@/utils/signup";
+import { signUpAction } from "@/utils/signup";
 
 function Header() {
   return (
@@ -26,28 +27,10 @@ function Header() {
   );
 }
 
-type SignUpButtonProps = {
-  signUpAction: ({ name, email, password }: SignUpActionProps) => void;
-  name: string;
-  email: string;
-  password: string;
-};
-
-function SignUpButton({
-  signUpAction,
-  name,
-  email,
-  password,
-}: SignUpButtonProps): JSX.Element {
+function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
-      onPress={() =>
-        signUpAction({
-          name,
-          email,
-          password,
-        })
-      }
+      {...props}
       className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
     >
       <Text className="text-white text-xl font-bold">Sign Up</Text>
@@ -56,10 +39,25 @@ function SignUpButton({
 }
 
 export default function SignUp() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const handleSignUp = async () => {
+    const { type, path, message } = await signUpAction({
+      name,
+      email,
+      password,
+    });
+
+    if (type === "error") {
+      console.error(message);
+    }
+
+    router.replace(path);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -106,12 +104,7 @@ export default function SignUp() {
             </TouchableOpacity>
           </View>
 
-          <SignUpButton
-            signUpAction={signUpAction}
-            name={name}
-            email={email}
-            password={password}
-          />
+          <SignUpButton onPress={handleSignUp} />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
