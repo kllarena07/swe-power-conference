@@ -41,7 +41,7 @@ function SignUpButton({
 }
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -57,9 +57,9 @@ export default function SignUp() {
         <View className="gap-5 w-full px-5 pt-5">
           <TextInput
             className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-            placeholder="Username"
+            value={name}
+            onChangeText={(text) => setName(text)}
+            placeholder="Full Name"
             placeholderTextColor="#bdbdbd"
             textAlignVertical="center"
           />
