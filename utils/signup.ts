@@ -22,6 +22,7 @@ export const signUpAction = async ({
     options: {
       data: {
         name: name,
+        expo_push_token: "", // expo push token here
       },
     },
   });
