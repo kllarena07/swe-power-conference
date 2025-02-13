@@ -54,6 +54,7 @@ export default function SignUp() {
 
     if (type === "error") {
       console.error(message);
+      return;
     }
 
     router.replace(path);
