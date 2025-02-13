@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacityProps,
+  Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -53,10 +54,11 @@ export default function SignUp() {
     });
 
     if (type === "error") {
-      console.error(message);
+      Alert.alert(type, message);
       return;
     }
 
+    Alert.alert(type, message);
     router.replace(path);
   };
 
