@@ -21,9 +21,9 @@ export default function Index() {
             Welcome to UMD's {"\n"} Power 2025 Conference
           </Text>
           <Text className="text-center text-lg text-[hsla(6,48%,85%,1)] font-[Inter]">
-            Lorem ipsum dolor sit amet, consectetuer dolor adipiscing elit, sed
-            dolor. Lorem ipsum dolor sit amet, consectetuer dolor adipiscing
-            elit, sed dolor
+            Rise Together{"\n"}
+            Empower Each Other{"\n"}
+            Reign as One
           </Text>
         </View>
 
