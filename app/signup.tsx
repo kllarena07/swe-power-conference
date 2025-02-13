@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacityProps,
+  Alert,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { signUpAction } from "@/utils/signup";
 
 function Header() {
   return (
@@ -25,14 +28,10 @@ function Header() {
   );
 }
 
-function SignUpButton({
-  handleSignUp,
-}: {
-  handleSignUp: () => void;
-}): JSX.Element {
+function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
-      onPress={handleSignUp}
+      {...props}
       className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
     >
       <Text className="text-white text-xl font-bold">Sign Up</Text>
@@ -41,13 +40,26 @@ function SignUpButton({
 }
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const handleSignUp = () => {
-    // Handle login logic here
+  const handleSignUp = async () => {
+    const { type, path, message } = await signUpAction({
+      name,
+      email,
+      password,
+    });
+
+    if (type === "error") {
+      Alert.alert(type, message);
+      return;
+    }
+
+    Alert.alert(type, message);
+    router.replace(path);
   };
 
   return (
@@ -57,9 +69,9 @@ export default function SignUp() {
         <View className="gap-5 w-full px-5 pt-5">
           <TextInput
             className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-            placeholder="Username"
+            value={name}
+            onChangeText={(text) => setName(text)}
+            placeholder="Full Name"
             placeholderTextColor="#bdbdbd"
             textAlignVertical="center"
           />
@@ -95,7 +107,7 @@ export default function SignUp() {
             </TouchableOpacity>
           </View>
 
-          <SignUpButton handleSignUp={handleSignUp} />
+          <SignUpButton onPress={handleSignUp} />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
