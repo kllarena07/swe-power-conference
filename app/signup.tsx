@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { signUpAction, SignUpActionProps } from "@/utils/signup";
 
 function Header() {
   return (
@@ -25,14 +26,28 @@ function Header() {
   );
 }
 
+type SignUpButtonProps = {
+  signUpAction: ({ name, email, password }: SignUpActionProps) => void;
+  name: string;
+  email: string;
+  password: string;
+};
+
 function SignUpButton({
-  handleSignUp,
-}: {
-  handleSignUp: () => void;
-}): JSX.Element {
+  signUpAction,
+  name,
+  email,
+  password,
+}: SignUpButtonProps): JSX.Element {
   return (
     <TouchableOpacity
-      onPress={handleSignUp}
+      onPress={() =>
+        signUpAction({
+          name,
+          email,
+          password,
+        })
+      }
       className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
     >
       <Text className="text-white text-xl font-bold">Sign Up</Text>
@@ -45,10 +60,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const handleSignUp = () => {
-    // Handle login logic here
-  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -95,7 +106,12 @@ export default function SignUp() {
             </TouchableOpacity>
           </View>
 
-          <SignUpButton handleSignUp={handleSignUp} />
+          <SignUpButton
+            signUpAction={signUpAction}
+            name={name}
+            email={email}
+            password={password}
+          />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
