@@ -59,7 +59,7 @@ function RootLayoutNav() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="signup" options={{ headerShown: false }} />
         <Stack.Screen
-          name="main/(tabs)"
+          name="protected/(tabs)"
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name="+not-found" />
