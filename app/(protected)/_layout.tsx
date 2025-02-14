@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react";
-import { Tabs, useRouter } from "expo-router";
+import { useState } from "react";
+import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StatusBar, Text } from "react-native";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "@/utils/supabase";
+import { StatusBar } from "react-native";
 
 export default function TabLayout() {
-  const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
   const [activeRoute, setActiveRoute] = useState("");
 
   const getIconColor = (routeName: string) => {
@@ -16,23 +12,8 @@ export default function TabLayout() {
       : "hsla(0, 0%, 74%, 1)";
   };
 
-  useEffect(() => {
-    // if (!session) {
-    //   router.replace("/login");
-    // }
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
-
   return (
     <>
-      {session && session.user && <Text>{session.user.id}</Text>}
       <Tabs
         screenOptions={{
           headerShown: false,
