@@ -1,23 +1,18 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import "../global.css";
 import { usePathname } from "expo-router";
-import { StatusBar } from "react-native";
+import { StatusBar, Text } from "react-native";
+// import { AuthProvider } from "@/context/AuthContext";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/utils/supabase";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
-};
+export { ErrorBoundary } from "expo-router";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,6 +23,32 @@ export default function RootLayout() {
     Kurale: require("../assets/fonts/Kurale-Regular.ttf"),
     ...FontAwesome.font,
   });
+
+  const [session, setSession] = useState<Session | null>(null);
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (session && session.user && segments[0] === "(protected)") {
+      console.log(session.user);
+      router.replace("/");
+    } else if (session && session.user) {
+      console.log(session.user);
+      router.replace("/(protected)");
+    } else if (segments[0] === "(protected)") {
+      router.replace("/login");
+    }
+  }, [session, router, segments]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -44,10 +65,10 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return <StackLayout />;
 }
 
-function RootLayoutNav() {
+function StackLayout() {
   const currentRoute = usePathname();
   return (
     <>
@@ -59,7 +80,7 @@ function RootLayoutNav() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="signup" options={{ headerShown: false }} />
         <Stack.Screen
-          name="protected/(tabs)"
+          name="(protected)"
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name="+not-found" />
