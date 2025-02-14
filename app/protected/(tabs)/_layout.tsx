@@ -17,9 +17,9 @@ export default function TabLayout() {
   };
 
   useEffect(() => {
-    if (!session) {
-      router.replace("/login");
-    }
+    // if (!session) {
+    //   router.replace("/login");
+    // }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

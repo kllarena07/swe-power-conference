@@ -1,30 +1,66 @@
-// This is the agenda page
 import { SafeAreaView, Text, ScrollView } from "react-native";
 import AgendaItem from "@/components/AgendaItem";
+import { supabase } from "@/utils/supabase";
+import { useEffect, useState } from "react";
+
+type AgendaItem = {
+  id: number;
+  created_at: string;
+  start_time: string;
+  end_time: string;
+  point_value: number;
+  title: string;
+  description: string;
+};
 
 export default function Index() {
-  const agendaItems = [
-    {
-      time: "10:00-13:00",
-      title: "Sponsor Fair",
-      description: "Connect with sponsors",
-    },
-    {
-      time: "14:00-15:00",
-      title: "Technical Workshop",
-      description: "Learn some fun stuff and blah",
-    },
-    {
-      time: "19:00-20:00",
-      title: "Closing Remarks",
-      description: "Power day done",
-    },
-    {
-      time: "19:00-20:00",
-      title: "Closing Remarks",
-      description: "Power day done",
-    },
-  ];
+  const [agendaItems, setAgendaItems] = useState<AgendaItem[]>([]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("agenda-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "agenda" },
+        () => {
+          // Fetch all agenda items after any change
+          const fetchAgenda = async () => {
+            const { data, error } = await supabase
+              .from("agenda")
+              .select("*")
+              .order("start_time");
+            if (error) {
+              console.error("Error fetching agenda:", error);
+              return;
+            }
+            if (data) setAgendaItems(data);
+          };
+          fetchAgenda();
+        }
+      )
+      .subscribe();
+
+    // Initial fetch
+    const fetchAgenda = async () => {
+      const { data, error } = await supabase
+        .from("agenda")
+        .select("*")
+        .order("start_time");
+      if (error) {
+        console.error("Error fetching agenda:", error);
+        return;
+      }
+      if (data) {
+        console.log("Fetched agenda items:", data.length);
+        setAgendaItems(data);
+      }
+    };
+    fetchAgenda();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   return (
     <SafeAreaView className="relative h-full bg-white">
@@ -33,14 +69,24 @@ export default function Index() {
       </Text>
 
       <ScrollView className="px-6">
-        {agendaItems.map((item, index) => (
-          <AgendaItem
-            key={index}
-            time={item.time}
-            title={item.title}
-            description={item.description}
-          />
-        ))}
+        {agendaItems.length === 0 ? (
+          <Text className="text-center text-gray-500">
+            No agenda items available
+          </Text>
+        ) : (
+          agendaItems.map(
+            ({ start_time, end_time, title, description }, index) => (
+              <AgendaItem
+                key={index}
+                index={index}
+                start_time={start_time}
+                end_time={end_time}
+                title={title}
+                description={description}
+              />
+            )
+          )
+        )}
       </ScrollView>
     </SafeAreaView>
   );
