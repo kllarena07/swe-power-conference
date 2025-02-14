@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacityProps,
+  Alert,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { loginAction } from "@/utils/login";
 
 function Header() {
   return (
@@ -25,14 +28,10 @@ function Header() {
   );
 }
 
-function LoginButton({
-  handleLogin,
-}: {
-  handleLogin: () => void;
-}): JSX.Element {
+function LoginButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
-      onPress={handleLogin}
+      {...props}
       className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
     >
       <Text className="text-white text-xl font-bold">Login</Text>
@@ -41,12 +40,23 @@ function LoginButton({
 }
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const handleLogin = () => {
-    // Handle login logic here
+  const handleLogin = async () => {
+    const { type, path, message } = await loginAction({
+      email,
+      password,
+    });
+
+    if (type === "error") {
+      Alert.alert(type, message);
+      return;
+    }
+
+    router.replace(path);
   };
 
   return (
@@ -93,7 +103,7 @@ export default function Login() {
               </Link>
             </Text>
           </View>
-          <LoginButton handleLogin={handleLogin} />
+          <LoginButton onPress={handleLogin} />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
