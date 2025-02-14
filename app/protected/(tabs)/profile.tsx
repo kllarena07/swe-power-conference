@@ -1,10 +1,32 @@
-import { Text, SafeAreaView, View, Image } from "react-native";
+import {
+  Text,
+  SafeAreaView,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React from "react";
+import { logoutAction } from "@/utils/logout";
+import { useRouter } from "expo-router";
 
 export default function Profile() {
+  const router = useRouter();
   const isAdmin = true;
   const pfpURL = require("@/assets/images/pfp-placeholder.png");
   const name = "Victoria Robertson";
+
+  const handleLogout = async () => {
+    const { type, path, message } = await logoutAction();
+
+    if (type === "error") {
+      Alert.alert(type, message);
+      return;
+    }
+
+    Alert.alert(type, message);
+    router.replace(path);
+  };
 
   return (
     <SafeAreaView className="relative w-full h-full bg-white">
@@ -15,7 +37,9 @@ export default function Profile() {
       <View className="flex-row items-center justify-between pt-3 px-5">
         <Text className="text-white text-lg">Settings</Text>
         <Text className="text-3xl text-white font-bold">Profile</Text>
-        <Text className="text-white text-lg">Logout</Text>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text className="text-white text-lg">Logout</Text>
+        </TouchableOpacity>
       </View>
       <View className="items-center mt-[25px]">
         <Image
