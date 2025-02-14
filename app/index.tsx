@@ -16,7 +16,7 @@ export default function Index() {
           resizeMode="contain"
         />
 
-        <View className="w-4/5">
+        <View className="w-4/5 gap-5">
           <Text className="text-center text-[hsla(40,36%,88%,1)] text-3xl font-[Kurale]">
             Welcome to UMD's {"\n"} Power 2025 Conference
           </Text>
@@ -28,6 +28,12 @@ export default function Index() {
         </View>
 
         <View className="w-4/5 gap-5">
+          <Link
+            href="/protected/(tabs)/profile"
+            className="w-full p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold text-xl"
+          >
+            Sign Up
+          </Link>
           <Link
             href="/signup"
             className="w-full p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold text-xl"

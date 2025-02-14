@@ -11,6 +11,7 @@ import { logoutAction } from "@/utils/logout";
 import { useRouter } from "expo-router";
 
 export default function Profile() {
+  console.log("profile page API call");
   const router = useRouter();
   const isAdmin = true;
   const pfpURL = require("@/assets/images/pfp-placeholder.png");

@@ -17,6 +17,10 @@ export default function TabLayout() {
   };
 
   useEffect(() => {
+    if (!session) {
+      router.replace("/login");
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -24,11 +28,6 @@ export default function TabLayout() {
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
-
-    if (!session) {
-      router.replace("/login");
-      return;
-    }
   }, []);
 
   return (
