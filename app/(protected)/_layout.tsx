@@ -2,9 +2,13 @@ import { useState } from "react";
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
+import { useAuth } from "@/context/AuthContext";
 
 export default function TabLayout() {
   const [activeRoute, setActiveRoute] = useState("");
+  const { user } = useAuth();
+
+  if (!user) return;
 
   const getIconColor = (routeName: string) => {
     return activeRoute === routeName

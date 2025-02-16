@@ -1,16 +1,13 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack, useRouter, useSegments } from "expo-router";
+import { Stack, usePathname, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "react-native-reanimated";
 
 import "../global.css";
-import { usePathname } from "expo-router";
-import { StatusBar, Text } from "react-native";
-// import { AuthProvider } from "@/context/AuthContext";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "@/utils/supabase";
+import { StatusBar } from "react-native";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -23,32 +20,6 @@ export default function RootLayout() {
     Kurale: require("../assets/fonts/Kurale-Regular.ttf"),
     ...FontAwesome.font,
   });
-
-  const [session, setSession] = useState<Session | null>(null);
-  const segments = useSegments();
-  const router = useRouter();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (session && session.user && segments[0] === "(protected)") {
-      console.log(session.user);
-      router.replace("/");
-    } else if (session && session.user) {
-      console.log(session.user);
-      router.replace("/(protected)");
-    } else if (segments[0] === "(protected)") {
-      router.replace("/login");
-    }
-  }, [session, router, segments]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -65,11 +36,31 @@ export default function RootLayout() {
     return null;
   }
 
-  return <StackLayout />;
+  return (
+    <AuthProvider>
+      <StackLayout />
+    </AuthProvider>
+  );
 }
 
 function StackLayout() {
+  const { user } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
   const currentRoute = usePathname();
+
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(protected)";
+
+    if (!user && inAuthGroup) {
+      console.log("Not authorized!", segments);
+      router.replace("/login");
+    } else if (user && !inAuthGroup) {
+      console.log("Authorized", segments);
+      router.replace("/(protected)");
+    }
+  }, [user, segments]);
+
   return (
     <>
       <StatusBar
