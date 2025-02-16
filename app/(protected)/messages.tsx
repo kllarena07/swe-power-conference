@@ -165,17 +165,19 @@ export default function Messages() {
           <Text className="text-4xl mt-3.5 mb-10 font-bold text-center">
             Messages
           </Text>
-          <TouchableOpacity
-            className="bg-[hsla(278,27%,48%,1)] absolute right-5 bottom-5 w-fit h-fit rounded-full z-50"
-            onPress={() => setIsModalVisible(true)}
-          >
-            <MaterialIcons
-              name="edit"
-              size={32}
-              color="white"
-              className="self-center p-3"
-            />
-          </TouchableOpacity>
+          {profileData?.is_admin ? (
+            <TouchableOpacity
+              className="bg-[hsla(278,27%,48%,1)] absolute right-5 bottom-5 w-fit h-fit rounded-full z-50"
+              onPress={() => setIsModalVisible(true)}
+            >
+              <MaterialIcons
+                name="edit"
+                size={32}
+                color="white"
+                className="self-center p-3"
+              />
+            </TouchableOpacity>
+          ) : undefined}
           <ScrollView className="px-10">
             {Array.from({ length: 10 }).map((_, index) => (
               <MessageCard
