@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/utils/supabase";
+import QRCode from "react-qr-code";
 
 type ProfileData = {
   id: number;
@@ -94,7 +95,7 @@ export default function Profile() {
         className="absolute w-full top-0"
       />
       <View className="flex-row items-center justify-between pt-3 px-5">
-        <Text className="text-white text-lg">Settings</Text>
+        <Text className="text-white text-lg opacity-0">Settings</Text>
         <Text className="text-3xl text-white font-bold">Profile</Text>
         <TouchableOpacity onPress={handleLogout}>
           <Text className="text-white text-lg">Logout</Text>
@@ -118,7 +119,11 @@ export default function Profile() {
       <View className="flex-1 bg-gray-100 p-5 mx-4 rounded-xl mt-6 mb-5">
         <Text className="font-bold text-xl">QR Code</Text>
         <View className="items-center justify-center flex-1">
-          <Image source={require("@/assets/images/fake-qrcode.png")} />
+          {profileData ? (
+            <QRCode value={profileData.user_id} />
+          ) : (
+            <Text>Error pulling profile data.</Text>
+          )}
         </View>
       </View>
       <View
