@@ -27,16 +27,32 @@ export const AuthProvider = ({ children }: any) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user);
+      if (session?.user) {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .single();
+        setUser(profileData);
+      }
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
-      setUser(session?.user);
+      if (session?.user) {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .single();
+        setUser(profileData);
+      } else {
+        setUser(undefined);
+      }
     });
 
     return () => subscription?.unsubscribe();
@@ -67,7 +83,12 @@ export const AuthProvider = ({ children }: any) => {
       };
     }
 
-    setUser(data.user);
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", data.user.id)
+      .single();
+    setUser(profileData);
 
     return {
       type: "success",
