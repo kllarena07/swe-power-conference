@@ -3,8 +3,20 @@ import { Session, User } from "@supabase/supabase-js";
 import { Href } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
+type UserProfile = {
+  id: number;
+  created_at: string;
+  name: string;
+  email: string;
+  points: number;
+  checked_in: boolean;
+  is_admin: boolean;
+  expo_push_token: string;
+  user_id: string;
+};
+
 interface AuthProps {
-  user: User | undefined;
+  user: UserProfile | undefined;
   onLogin: (email: string, password: string) => Promise<ActionRedirect>;
   onLogout: () => Promise<ActionRedirect>;
 }
