@@ -121,7 +121,13 @@ export default function Profile() {
           <Image source={require("@/assets/images/fake-qrcode.png")} />
         </View>
       </View>
-      <View className="absolute bottom-0 right-0 bg-[hsla(278,41%,74%,1)] w-1/3 h-[1.5px]" />
+      <View
+        className={`absolute bottom-0 ${
+          profileData?.is_admin ? "right-1/4" : "right-0"
+        } bg-[hsla(278,41%,74%,1)] ${
+          profileData?.is_admin ? "w-1/4" : "w-1/3"
+        } h-[1.5px]`}
+      />
     </SafeAreaView>
   );
 }

@@ -1,9 +1,9 @@
-import { SafeAreaView, Text, ScrollView } from "react-native";
+import { SafeAreaView, Text, ScrollView, View } from "react-native";
 import AgendaItem from "@/components/AgendaItem";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState, useMemo } from "react";
+import { useAuth } from "@/context/AuthContext";
 
-// Define AgendaItem type
 type AgendaItem = {
   id: number;
   created_at: string;
@@ -14,10 +14,45 @@ type AgendaItem = {
   description: string;
 };
 
+type ProfileData = {
+  id: number;
+  created_at: string;
+  name: string;
+  email: string;
+  points: number;
+  checked_in: boolean;
+  is_admin: boolean;
+  expo_push_token: string;
+  user_id: string;
+};
+
 export default function Index() {
   const [agendaItems, setAgendaItems] = useState<AgendaItem[]>([]);
+  const { user } = useAuth();
+
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(
+    undefined
+  );
 
   useEffect(() => {
+    const fetchProfileData = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user?.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      if (data) {
+        setProfileData(data);
+      }
+    };
+    fetchProfileData();
+
     const fetchAgenda = async () => {
       const { data, error } = await supabase
         .from("agenda")
@@ -117,6 +152,13 @@ export default function Index() {
           )
         )}
       </ScrollView>
+      <View
+        className={`absolute bottom-0 ${
+          profileData?.is_admin ? "left-1/4" : "left-1/3"
+        } bg-[hsla(278,41%,74%,1)] ${
+          profileData?.is_admin ? "w-1/4" : "w-1/3"
+        } h-[1.5px]`}
+      />
     </SafeAreaView>
   );
 }
