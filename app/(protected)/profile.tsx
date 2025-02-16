@@ -6,21 +6,74 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/utils/supabase";
+
+type ProfileData = {
+  id: number;
+  created_at: string;
+  name: string;
+  email: string;
+  points: number;
+  checked_in: boolean;
+  is_admin: boolean;
+  expo_push_token: string;
+  user_id: string;
+};
 
 export default function Profile() {
-  const { onLogout } = useAuth();
+  const { onLogout, user } = useAuth();
 
   const router = useRouter();
-  const isAdmin = true;
   const pfpURL = require("@/assets/images/pfp-placeholder.png");
-  const name = "Victoria Robertson";
+
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    console.log("profile page API call");
-  });
+    const fetchProfileData = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user?.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      if (data) {
+        setProfileData(data);
+      }
+    };
+    fetchProfileData();
+
+    const channel = supabase
+      .channel("profile-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "profiles",
+          filter: `user_id=eq.${user?.id}`,
+        },
+        (payload) => {
+          if (payload.eventType === "UPDATE") {
+            setProfileData(payload.new as ProfileData);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      void channel.unsubscribe();
+    };
+  }, [user?.id]);
 
   const handleLogout = async () => {
     const { type, path, message } = await onLogout!();
@@ -54,10 +107,13 @@ export default function Profile() {
         />
       </View>
       <View className="mt-5 gap-2">
-        <Text className="font-bold text-4xl text-center">{name}</Text>
-        {isAdmin ? (
-          <Text className="text-center font-bold text-2xl">Admin</Text>
-        ) : undefined}
+        <Text className="font-bold text-4xl text-center">
+          {profileData?.name}
+          {profileData?.is_admin ? " (Admin)" : ""}
+        </Text>
+        <Text className="font-bold text-2xl text-center">
+          {profileData?.checked_in ? "Checked-In ✅" : "Not Checked-In ❌"}
+        </Text>
       </View>
       <View className="flex-1 bg-gray-100 p-5 mx-4 rounded-xl mt-6 mb-5">
         <Text className="font-bold text-xl">QR Code</Text>

@@ -27,16 +27,22 @@ export const AuthProvider = ({ children }: any) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user);
+      if (session?.user) {
+        setUser(session.user);
+      }
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
-      setUser(session?.user);
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(undefined);
+      }
     });
 
     return () => subscription?.unsubscribe();
@@ -67,7 +73,6 @@ export const AuthProvider = ({ children }: any) => {
       };
     }
 
-    console.log(data.user);
     setUser(data.user);
 
     return {
