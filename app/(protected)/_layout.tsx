@@ -116,21 +116,22 @@ export default function TabLayout() {
             ),
           }}
         />
-        {profileData?.is_admin ? (
-          <Tabs.Screen
-            name="camera"
-            options={{
-              tabBarLabel: "",
-              tabBarIcon: () => (
-                <MaterialIcons
-                  name="camera-alt"
-                  size={32}
-                  color={getIconColor("camera")}
-                />
-              ),
-            }}
-          />
-        ) : undefined}
+        <Tabs.Screen
+          name="camera"
+          options={{
+            tabBarItemStyle: {
+              display: profileData?.is_admin ? "flex" : "none",
+            },
+            tabBarLabel: "",
+            tabBarIcon: () => (
+              <MaterialIcons
+                name="camera-alt"
+                size={32}
+                color={getIconColor("camera")}
+              />
+            ),
+          }}
+        />
       </Tabs>
     </>
   );
