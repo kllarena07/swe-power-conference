@@ -39,7 +39,7 @@ export const loginAction = async ({
 
   return {
     type: "success",
-    path: "/protected/(tabs)",
+    path: "/(protected)",
     message: "Successfully logged in",
   };
 };

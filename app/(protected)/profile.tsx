@@ -6,19 +6,24 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React from "react";
-import { logoutAction } from "@/utils/logout";
+import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Profile() {
-  console.log("profile page API call");
+  const { onLogout } = useAuth();
+
   const router = useRouter();
   const isAdmin = true;
   const pfpURL = require("@/assets/images/pfp-placeholder.png");
   const name = "Victoria Robertson";
 
+  useEffect(() => {
+    console.log("profile page API call");
+  });
+
   const handleLogout = async () => {
-    const { type, path, message } = await logoutAction();
+    const { type, path, message } = await onLogout!();
 
     if (type === "error") {
       Alert.alert(type, message);

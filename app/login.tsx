@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { loginAction } from "@/utils/login";
+import { useAuth } from "@/context/AuthContext";
 
 function Header() {
   return (
@@ -44,12 +44,10 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { onLogin } = useAuth();
 
   const handleLogin = async () => {
-    const { type, path, message } = await loginAction({
-      email,
-      password,
-    });
+    const { type, path, message } = await onLogin!(email, password);
 
     if (type === "error") {
       Alert.alert(type, message);
