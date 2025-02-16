@@ -68,7 +68,9 @@ export default function TabLayout() {
             const routeName = e.data.state.routes[e.data.state.index].name;
 
             const theme =
-              routeName === "profile" ? "light-content" : "dark-content";
+              routeName === "profile" || routeName === "camera"
+                ? "light-content"
+                : "dark-content";
 
             StatusBar.setBarStyle(theme);
             setActiveRoute(routeName);

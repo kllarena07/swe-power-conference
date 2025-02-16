@@ -64,7 +64,11 @@ function StackLayout() {
   return (
     <>
       <StatusBar
-        barStyle={currentRoute === "/" ? "light-content" : "dark-content"}
+        barStyle={
+          currentRoute === "/" && segments[0] !== "(protected)"
+            ? "light-content"
+            : "dark-content"
+        }
       />
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
