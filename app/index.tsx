@@ -29,12 +29,6 @@ export default function Index() {
 
         <View className="w-4/5 gap-5">
           <Link
-            href="/protected/(tabs)/profile"
-            className="w-full p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold text-xl"
-          >
-            Sign Up
-          </Link>
-          <Link
             href="/signup"
             className="w-full p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold text-xl"
           >
