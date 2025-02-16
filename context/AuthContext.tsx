@@ -67,7 +67,6 @@ export const AuthProvider = ({ children }: any) => {
       };
     }
 
-    console.log(data.user);
     setUser(data.user);
 
     return {
