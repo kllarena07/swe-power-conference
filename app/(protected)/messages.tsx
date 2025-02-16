@@ -7,7 +7,7 @@ import {
   TextInput,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MessageCard from "@/components/MessageCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
@@ -15,11 +15,72 @@ import {
   Gesture,
   GestureDetector,
 } from "react-native-gesture-handler";
+import { supabase } from "@/utils/supabase";
+import { useAuth } from "@/context/AuthContext";
+
+type ProfileData = {
+  id: number;
+  created_at: string;
+  name: string;
+  email: string;
+  points: number;
+  checked_in: boolean;
+  is_admin: boolean;
+  expo_push_token: string;
+  user_id: string;
+};
 
 export default function Messages() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
+  const { user } = useAuth();
+
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user?.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      if (data) {
+        setProfileData(data);
+      }
+    };
+    fetchProfileData();
+
+    const channel = supabase
+      .channel("profile-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "profiles",
+          filter: `user_id=eq.${user?.id}`,
+        },
+        (payload) => {
+          if (payload.eventType === "UPDATE") {
+            setProfileData(payload.new as ProfileData);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      void channel.unsubscribe();
+    };
+  }, [user?.id]);
 
   const tap = Gesture.Tap()
     .numberOfTaps(2)
