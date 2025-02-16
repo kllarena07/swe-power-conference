@@ -107,10 +107,13 @@ export default function Profile() {
         />
       </View>
       <View className="mt-5 gap-2">
-        <Text className="font-bold text-4xl text-center">{name}</Text>
-        {isAdmin ? (
-          <Text className="text-center font-bold text-2xl">Admin</Text>
-        ) : undefined}
+        <Text className="font-bold text-4xl text-center">
+          {profileData?.name}
+          {profileData?.is_admin ? " (Admin)" : ""}
+        </Text>
+        <Text className="font-bold text-2xl text-center">
+          {profileData?.checked_in ? "Checked-In ✅" : "Not Checked-In ❌"}
+        </Text>
       </View>
       <View className="flex-1 bg-gray-100 p-5 mx-4 rounded-xl mt-6 mb-5">
         <Text className="font-bold text-xl">QR Code</Text>
