@@ -3,20 +3,8 @@ import { Session, User } from "@supabase/supabase-js";
 import { Href } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
-type UserProfile = {
-  id: number;
-  created_at: string;
-  name: string;
-  email: string;
-  points: number;
-  checked_in: boolean;
-  is_admin: boolean;
-  expo_push_token: string;
-  user_id: string;
-};
-
 interface AuthProps {
-  user: UserProfile | undefined;
+  user: User | undefined;
   onLogin: (email: string, password: string) => Promise<ActionRedirect>;
   onLogout: () => Promise<ActionRedirect>;
 }
@@ -42,12 +30,7 @@ export const AuthProvider = ({ children }: any) => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .single();
-        setUser(profileData);
+        setUser(session.user);
       }
     });
 
@@ -56,12 +39,7 @@ export const AuthProvider = ({ children }: any) => {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .single();
-        setUser(profileData);
+        setUser(session.user);
       } else {
         setUser(undefined);
       }
@@ -95,12 +73,7 @@ export const AuthProvider = ({ children }: any) => {
       };
     }
 
-    const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", data.user.id)
-      .single();
-    setUser(profileData);
+    setUser(data.user);
 
     return {
       type: "success",
