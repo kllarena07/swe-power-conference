@@ -7,10 +7,12 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect } from "react";
-import { logoutAction } from "@/utils/logout";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Profile() {
+  const { onLogout } = useAuth();
+
   const router = useRouter();
   const isAdmin = true;
   const pfpURL = require("@/assets/images/pfp-placeholder.png");
@@ -21,7 +23,7 @@ export default function Profile() {
   });
 
   const handleLogout = async () => {
-    const { type, path, message } = await logoutAction();
+    const { type, path, message } = await onLogout!();
 
     if (type === "error") {
       Alert.alert(type, message);
