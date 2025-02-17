@@ -92,14 +92,67 @@ export default function App() {
     Alert.alert("Success", `Checked in ${profile?.name || id}`, alertBtnConfig);
   };
 
-  const handlePointAddition = ({
-    points,
-    id,
-  }: {
-    points: number;
-    id: string;
-  }) => {
-    console.log(`Adding ${points} to ${id}`);
+  const showPointPrompt = (id: string) => {
+    Alert.prompt(
+      "Enter the number of points to add",
+      "Please enter a nonnegative number:",
+      (text) => {
+        const number = parseFloat(text);
+        if (isNaN(number) || number < 0) {
+          Alert.alert("Invalid Input", "Please enter a nonnegative number!", [
+            { text: "Try Again", onPress: () => showPointPrompt(id) },
+          ]);
+        } else {
+          addPoints(id, number);
+        }
+      },
+      "plain-text"
+    );
+  };
+
+  const addPoints = async (id: string, pointVal: number) => {
+    const alertBtnConfig = [
+      {
+        text: "Ok",
+        onPress: () => {
+          setScanned(false);
+          isProcessing.current = false;
+        },
+      },
+    ];
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("points, name")
+      .eq("user_id", id)
+      .single();
+
+    if (!profile) {
+      Alert.alert("Error", "Could not find user profile", alertBtnConfig);
+      return;
+    }
+
+    const newPoints = (profile.points || 0) + pointVal;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ points: newPoints })
+      .eq("user_id", id);
+
+    if (error) {
+      Alert.alert("Error adding points", error.message, alertBtnConfig);
+      return;
+    }
+
+    Alert.alert(
+      "Success",
+      `Added ${pointVal} points to ${profile.name}. New total: ${newPoints}`,
+      alertBtnConfig
+    );
+  };
+
+  const handlePointAddition = async ({ id }: { id: string }) => {
+    showPointPrompt(id);
   };
 
   const SelectionScreen = () => {
@@ -147,7 +200,7 @@ export default function App() {
                 if (cameraMode === "check-in") {
                   handleCheckIn({ id: data });
                 } else if (cameraMode === "points") {
-                  handlePointAddition({ points: 0, id: data });
+                  handlePointAddition({ id: data });
                 }
               }
             }}
