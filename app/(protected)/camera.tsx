@@ -1,8 +1,19 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { Button, SafeAreaView, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  Button,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function App() {
   const [permission, requestPermission] = useCameraPermissions();
+  const [cameraMode, setCameraMode] = useState<
+    "check-in" | "points" | undefined
+  >(undefined);
 
   if (!permission) {
     return (
@@ -23,14 +34,56 @@ export default function App() {
     );
   }
 
+  const SelectionScreen = () => {
+    return (
+      <View className="w-full items-center">
+        <View className="gap-5">
+          <Text className="text-3xl font-bold">Select a Camera Mode</Text>
+          <TouchableOpacity
+            className="bg-black p-5 rounded-md"
+            onPress={() => setCameraMode("check-in")}
+          >
+            <Text className="text-white font-bold text-center">Check-In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-black p-5 rounded-md"
+            onPress={() => setCameraMode("points")}
+          >
+            <Text className="text-white font-bold text-center">
+              Point Addition
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const CameraScreen = () => {
+    return (
+      <View className="bg-black">
+        <SafeAreaView className="w-full h-full px-5">
+          <CameraView
+            style={{
+              flex: 1,
+            }}
+            facing="back"
+            className="relative"
+          >
+            <TouchableOpacity
+              className="absolute top-2 right-2"
+              onPress={() => setCameraMode(undefined)}
+            >
+              <MaterialIcons name="close" size={32} color="white" />
+            </TouchableOpacity>
+          </CameraView>
+        </SafeAreaView>
+      </View>
+    );
+  };
+
   return (
     <View className="relative flex-1 justify-center">
-      <CameraView
-        style={{
-          flex: 1,
-        }}
-        facing="back"
-      />
+      {cameraMode ? <CameraScreen /> : <SelectionScreen />}
       <View className="absolute bottom-0 right-0 bg-[hsla(278,41%,74%,1)] w-1/4 h-[1.5px]" />
     </View>
   );
