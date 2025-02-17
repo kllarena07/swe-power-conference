@@ -1,7 +1,9 @@
+import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  Alert,
   Button,
   SafeAreaView,
   Text,
@@ -10,7 +12,9 @@ import {
 } from "react-native";
 
 export default function App() {
+  const isProcessing = useRef(false);
   const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
   const [cameraMode, setCameraMode] = useState<
     "check-in" | "points" | undefined
   >(undefined);
@@ -33,6 +37,64 @@ export default function App() {
       </View>
     );
   }
+
+  const handleCheckIn = async ({ id }: { id: string }) => {
+    const alertBtnConfig = [
+      {
+        text: "Ok",
+        onPress: () => {
+          setScanned(false);
+          isProcessing.current = false;
+        },
+      },
+    ];
+
+    const { data: userData, error: userError } = await supabase
+      .from("profiles")
+      .select("checked_in")
+      .eq("user_id", id)
+      .single();
+
+    if (userError) {
+      Alert.alert(
+        "Error",
+        "Could not verify user check-in status",
+        alertBtnConfig
+      );
+      return;
+    }
+
+    if (userData.checked_in) {
+      Alert.alert(
+        "Already Checked In",
+        "This user has already been checked in",
+        alertBtnConfig
+      );
+      return;
+    }
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ checked_in: true })
+      .eq("user_id", id);
+
+    if (error) {
+      Alert.alert("Error checking-in user", `${error}`, alertBtnConfig);
+      return;
+    }
+
+    Alert.alert("Success", `Checked in ${id}`, alertBtnConfig);
+  };
+
+  const handlePointAddition = ({
+    points,
+    id,
+  }: {
+    points: number;
+    id: string;
+  }) => {
+    console.log(`Adding ${points} to ${id}`);
+  };
 
   const SelectionScreen = () => {
     return (
@@ -68,8 +130,20 @@ export default function App() {
             }}
             facing="back"
             className="relative"
-            onBarcodeScanned={(result) => {
-              console.log(result.data);
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+            onBarcodeScanned={({ data }) => {
+              if (!scanned && !isProcessing.current && cameraMode) {
+                isProcessing.current = true;
+                setScanned(true);
+
+                if (cameraMode === "check-in") {
+                  handleCheckIn({ id: data });
+                } else if (cameraMode === "points") {
+                  handlePointAddition({ points: 0, id: data });
+                }
+              }
             }}
           >
             <View className="flex flex-row justify-between items-center px-2">
