@@ -68,6 +68,9 @@ export default function App() {
             }}
             facing="back"
             className="relative"
+            onBarcodeScanned={(result) => {
+              console.log(result.data);
+            }}
           >
             <View className="flex flex-row justify-between items-center px-2">
               <Text className="font-bold text-lg text-white">
