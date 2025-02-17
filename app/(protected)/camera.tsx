@@ -69,12 +69,14 @@ export default function App() {
             facing="back"
             className="relative"
           >
-            <TouchableOpacity
-              className="absolute top-2 right-2"
-              onPress={() => setCameraMode(undefined)}
-            >
-              <MaterialIcons name="close" size={32} color="white" />
-            </TouchableOpacity>
+            <View className="flex flex-row justify-between items-center px-2">
+              <Text className="font-bold text-lg text-white">
+                Mode Selected: {cameraMode}
+              </Text>
+              <TouchableOpacity onPress={() => setCameraMode(undefined)}>
+                <MaterialIcons name="close" size={32} color="white" />
+              </TouchableOpacity>
+            </View>
           </CameraView>
         </SafeAreaView>
       </View>
