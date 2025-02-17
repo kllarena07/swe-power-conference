@@ -55,10 +55,16 @@ export default function App() {
       .eq("user_id", id)
       .single();
 
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("name")
+      .eq("user_id", id)
+      .single();
+
     if (userError) {
       Alert.alert(
         "Error",
-        "Could not verify user check-in status",
+        `Could not verify ${profile?.name}'s check-in status`,
         alertBtnConfig
       );
       return;
@@ -67,7 +73,7 @@ export default function App() {
     if (userData.checked_in) {
       Alert.alert(
         "Already Checked In",
-        "This user has already been checked in",
+        `${profile?.name} has already been checked in`,
         alertBtnConfig
       );
       return;
@@ -83,7 +89,7 @@ export default function App() {
       return;
     }
 
-    Alert.alert("Success", `Checked in ${id}`, alertBtnConfig);
+    Alert.alert("Success", `Checked in ${profile?.name || id}`, alertBtnConfig);
   };
 
   const handlePointAddition = ({
