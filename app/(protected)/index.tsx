@@ -4,45 +4,11 @@ import { supabase } from "@/utils/supabase";
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-type ProfileData = {
-  id: number;
-  created_at: string;
-  name: string;
-  email: string;
-  points: number;
-  checked_in: boolean;
-  is_admin: boolean;
-  expo_push_token: string;
-  user_id: string;
-};
-
 export default function Index() {
   const [agendaItems, setAgendaItems] = useState<AgendaItemType[]>([]);
-  const { user } = useAuth();
-
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(
-    undefined
-  );
+  const { profileData } = useAuth();
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user?.id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching profile:", error);
-        return;
-      }
-
-      if (data) {
-        setProfileData(data);
-      }
-    };
-    fetchProfileData();
-
     const fetchAgenda = async () => {
       const { data, error } = await supabase
         .from("agenda")
@@ -119,7 +85,7 @@ export default function Index() {
     return () => {
       void channel.unsubscribe();
     };
-  }, [user]);
+  }, []);
 
   const sortedAgendaItems = useMemo(() => {
     return [...agendaItems].sort((a, b) =>

@@ -6,75 +6,16 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/utils/supabase";
 import QRCode from "react-qr-code";
 
-type ProfileData = {
-  id: number;
-  created_at: string;
-  name: string;
-  email: string;
-  points: number;
-  checked_in: boolean;
-  is_admin: boolean;
-  expo_push_token: string;
-  user_id: string;
-};
-
 export default function Profile() {
-  const { onLogout, user } = useAuth();
+  const { onLogout, profileData } = useAuth();
 
   const router = useRouter();
   const pfpURL = require("@/assets/images/pfp-placeholder.png");
-
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user?.id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching profile:", error);
-        return;
-      }
-
-      if (data) {
-        setProfileData(data);
-      }
-    };
-    fetchProfileData();
-
-    const channel = supabase
-      .channel("profile-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "profiles",
-          filter: `user_id=eq.${user?.id}`,
-        },
-        (payload) => {
-          if (payload.eventType === "UPDATE") {
-            setProfileData(payload.new as ProfileData);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      void channel.unsubscribe();
-    };
-  }, [user?.id]);
 
   const handleLogout = async () => {
     const { type, path, message } = await onLogout!();
