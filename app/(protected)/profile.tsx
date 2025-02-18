@@ -13,9 +13,7 @@ import QRCode from "react-qr-code";
 
 export default function Profile() {
   const { onLogout, profileData } = useAuth();
-
   const router = useRouter();
-  const pfpURL = require("@/assets/images/pfp-placeholder.png");
 
   const handleLogout = async () => {
     const { type, path, message } = await onLogout!();
@@ -44,8 +42,8 @@ export default function Profile() {
       </View>
       <View className="items-center mt-[25px]">
         <Image
-          source={pfpURL}
-          className="aspect-square h-[170px] rounded-full border-2 border-white shadow-xl"
+          source={require("@/assets/images/swe-logo.png")}
+          className="aspect-square h-[200px] rounded-full"
         />
       </View>
       <View className="mt-5 gap-2">
