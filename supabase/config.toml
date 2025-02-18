@@ -186,6 +186,11 @@ max_frequency = "5s"
 # enabled = true
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
+[functions.email-verified]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/email-verified/index.ts"
+
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
 [auth.sms.twilio]
 enabled = false
