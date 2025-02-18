@@ -36,7 +36,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export default function App() {
+export default function CameraScanner() {
   const isProcessing = useRef(false);
   const scannedRef = useRef(false);
 
