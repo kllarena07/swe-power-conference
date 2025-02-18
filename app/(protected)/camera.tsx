@@ -1,7 +1,7 @@
 import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
 import {
   Alert,
   Button,
@@ -11,13 +11,37 @@ import {
   View,
 } from "react-native";
 
-export default function App() {
+type CameraMode = "check-in" | "points" | null;
+
+interface State {
+  cameraMode: CameraMode;
+}
+
+type Action =
+  | { type: "OPEN_CAMERA"; mode: "check-in" | "points" }
+  | { type: "CLOSE_CAMERA" };
+
+const initialState: State = {
+  cameraMode: null,
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "OPEN_CAMERA":
+      return { ...state, cameraMode: action.mode };
+    case "CLOSE_CAMERA":
+      return { cameraMode: null };
+    default:
+      return state;
+  }
+}
+
+export default function CameraScanner() {
   const isProcessing = useRef(false);
+  const scannedRef = useRef(false);
+
   const [permission, requestPermission] = useCameraPermissions();
-  const [scanned, setScanned] = useState(false);
-  const [cameraMode, setCameraMode] = useState<
-    "check-in" | "points" | undefined
-  >(undefined);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   if (!permission) {
     return (
@@ -38,14 +62,16 @@ export default function App() {
     );
   }
 
+  const resetScanningFlags = () => {
+    scannedRef.current = false;
+    isProcessing.current = false;
+  };
+
   const handleCheckIn = async ({ id }: { id: string }) => {
     const alertBtnConfig = [
       {
         text: "Ok",
-        onPress: () => {
-          setScanned(false);
-          isProcessing.current = false;
-        },
+        onPress: resetScanningFlags,
       },
     ];
 
@@ -114,10 +140,7 @@ export default function App() {
     const alertBtnConfig = [
       {
         text: "Ok",
-        onPress: () => {
-          setScanned(false);
-          isProcessing.current = false;
-        },
+        onPress: resetScanningFlags,
       },
     ];
 
@@ -155,73 +178,81 @@ export default function App() {
     showPointPrompt(id);
   };
 
-  const SelectionScreen = () => {
-    return (
-      <View className="w-full items-center">
-        <View className="gap-5">
-          <Text className="text-3xl font-bold">Select a Camera Mode</Text>
-          <TouchableOpacity
-            className="bg-black p-5 rounded-md"
-            onPress={() => setCameraMode("check-in")}
-          >
-            <Text className="text-white font-bold text-center">Check-In</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-black p-5 rounded-md"
-            onPress={() => setCameraMode("points")}
-          >
-            <Text className="text-white font-bold text-center">
-              Point Addition
-            </Text>
-          </TouchableOpacity>
-        </View>
+  const SelectionScreen = () => (
+    <View
+      className="w-full items-center"
+      style={{
+        display: state.cameraMode ? "none" : "flex",
+      }}
+    >
+      <View className="gap-5">
+        <Text className="text-3xl font-bold">Select a Camera Mode</Text>
+        <TouchableOpacity
+          className="bg-black p-5 rounded-md"
+          onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "check-in" })}
+        >
+          <Text className="text-white font-bold text-center">Check-In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="bg-black p-5 rounded-md"
+          onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "points" })}
+        >
+          <Text className="text-white font-bold text-center">
+            Point Addition
+          </Text>
+        </TouchableOpacity>
       </View>
-    );
-  };
+    </View>
+  );
 
-  const CameraScreen = () => {
-    return (
-      <View className="bg-black">
-        <SafeAreaView className="w-full h-full px-5">
-          <CameraView
-            style={{
-              flex: 1,
-            }}
-            facing="back"
-            className="relative"
-            barcodeScannerSettings={{
-              barcodeTypes: ["qr"],
-            }}
-            onBarcodeScanned={({ data }) => {
-              if (!scanned && !isProcessing.current && cameraMode) {
-                isProcessing.current = true;
-                setScanned(true);
-
-                if (cameraMode === "check-in") {
-                  handleCheckIn({ id: data });
-                } else if (cameraMode === "points") {
-                  handlePointAddition({ id: data });
-                }
+  const CameraScreen = () => (
+    <View
+      style={{ display: state.cameraMode ? "flex" : "none" }}
+      className="bg-black items-center justify-center"
+    >
+      <SafeAreaView className="w-full h-full px-5">
+        <CameraView
+          style={{ flex: 1 }}
+          facing="back"
+          className="relative"
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"],
+          }}
+          onBarcodeScanned={({ data }) => {
+            if (
+              !scannedRef.current &&
+              !isProcessing.current &&
+              state.cameraMode
+            ) {
+              isProcessing.current = true;
+              scannedRef.current = true;
+              if (state.cameraMode === "check-in") {
+                handleCheckIn({ id: data });
+              } else if (state.cameraMode === "points") {
+                handlePointAddition({ id: data });
               }
-            }}
-          >
-            <View className="flex flex-row justify-between items-center px-2">
-              <Text className="font-bold text-lg text-white">
-                Mode Selected: {cameraMode}
-              </Text>
-              <TouchableOpacity onPress={() => setCameraMode(undefined)}>
-                <MaterialIcons name="close" size={32} color="white" />
-              </TouchableOpacity>
-            </View>
-          </CameraView>
-        </SafeAreaView>
-      </View>
-    );
-  };
+            }
+          }}
+        >
+          <View className="flex flex-row justify-between items-center px-2">
+            <Text className="font-bold text-lg text-white">
+              Mode Selected: {state.cameraMode}
+            </Text>
+            <TouchableOpacity
+              onPress={() => dispatch({ type: "CLOSE_CAMERA" })}
+            >
+              <MaterialIcons name="close" size={32} color="white" />
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      </SafeAreaView>
+    </View>
+  );
 
   return (
     <View className="relative flex-1 justify-center">
-      {cameraMode ? <CameraScreen /> : <SelectionScreen />}
+      <SelectionScreen />
+      <CameraScreen />
       <View className="absolute bottom-0 right-0 bg-[hsla(278,41%,74%,1)] w-1/4 h-[1.5px]" />
     </View>
   );
