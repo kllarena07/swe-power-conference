@@ -1,18 +1,8 @@
 import { SafeAreaView, Text, ScrollView, View } from "react-native";
-import AgendaItem from "@/components/AgendaItem";
+import AgendaItem, { AgendaItemType } from "@/components/AgendaItem";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
-
-type AgendaItem = {
-  id: number;
-  created_at: string;
-  start_time: string;
-  end_time: string;
-  point_value: number;
-  title: string;
-  description: string;
-};
 
 type ProfileData = {
   id: number;
@@ -27,7 +17,7 @@ type ProfileData = {
 };
 
 export default function Index() {
-  const [agendaItems, setAgendaItems] = useState<AgendaItem[]>([]);
+  const [agendaItems, setAgendaItems] = useState<AgendaItemType[]>([]);
   const { user } = useAuth();
 
   const [profileData, setProfileData] = useState<ProfileData | undefined>(
@@ -66,11 +56,24 @@ export default function Index() {
 
       if (data) {
         setAgendaItems((prevItems) => {
-          // Merge existing items with new data, filtering duplicates
-          const newItems = data.filter(
-            (newItem) => !prevItems.some((oldItem) => oldItem.id === newItem.id)
+          const fetchedMap = new Map(data.map((item) => [item.id, item]));
+
+          const reconciledItems = prevItems.filter((item) =>
+            fetchedMap.has(item.id)
           );
-          return [...prevItems, ...newItems];
+
+          data.forEach((item) => {
+            const index = reconciledItems.findIndex(
+              (existing) => existing.id === item.id
+            );
+            if (index === -1) {
+              reconciledItems.push(item);
+            } else {
+              reconciledItems[index] = item;
+            }
+          });
+
+          return reconciledItems;
         });
       }
     };
@@ -86,17 +89,16 @@ export default function Index() {
           setAgendaItems((prevItems) => {
             let updatedItems = [...prevItems];
 
-            // Existing real-time update logic remains unchanged
             switch (payload.eventType) {
               case "INSERT":
                 if (!prevItems.some((item) => item.id === payload.new.id)) {
-                  updatedItems.push(payload.new as AgendaItem);
+                  updatedItems.push(payload.new as AgendaItemType);
                 }
                 break;
               case "UPDATE":
                 updatedItems = prevItems.map((item) =>
                   item.id === payload.new.id
-                    ? (payload.new as AgendaItem)
+                    ? (payload.new as AgendaItemType)
                     : item
                 );
                 break;
@@ -117,9 +119,8 @@ export default function Index() {
     return () => {
       void channel.unsubscribe();
     };
-  }, []);
+  }, [user]);
 
-  // Sorting logic remains unchanged
   const sortedAgendaItems = useMemo(() => {
     return [...agendaItems].sort((a, b) =>
       a.start_time.localeCompare(b.start_time)

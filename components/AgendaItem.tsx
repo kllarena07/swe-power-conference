@@ -2,13 +2,23 @@ import React from "react";
 import { View, Text } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-interface AgendaItemProps {
+export type AgendaItemType = {
+  id: number;
+  created_at: string;
+  start_time: string;
+  end_time: string;
+  point_value: number;
+  title: string;
+  description: string;
+};
+
+type AgendaItemProps = {
   start_time: string;
   end_time: string;
   title: string;
   description: string;
   index: number;
-}
+};
 
 const formatTimeString = (time_string: string) => {
   return new Date(time_string).toLocaleTimeString("en-US", {
