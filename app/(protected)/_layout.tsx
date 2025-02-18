@@ -1,51 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/utils/supabase";
-
-type ProfileData = {
-  id: number;
-  created_at: string;
-  name: string;
-  email: string;
-  points: number;
-  checked_in: boolean;
-  is_admin: boolean;
-  expo_push_token: string;
-  user_id: string;
-};
 
 export default function TabLayout() {
   const [activeRoute, setActiveRoute] = useState("");
-  const { user } = useAuth();
+  const { user, profileData } = useAuth();
 
   if (!user) return;
-
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user?.id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching profile:", error);
-        return;
-      }
-
-      if (data) {
-        setProfileData(data);
-      }
-    };
-    fetchProfileData();
-  }, []);
 
   const getIconColor = (routeName: string) => {
     return activeRoute === routeName
