@@ -74,6 +74,7 @@ function StackLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="signup" options={{ headerShown: false }} />
+        <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
         <Stack.Screen
           name="(protected)"
           options={{ headerShown: false, gestureEnabled: false }}

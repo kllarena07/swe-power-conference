@@ -63,7 +63,7 @@ export default function Login() {
         <Header />
         <View className="gap-5 w-full px-5 pt-5">
           <TextInput
-            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md"
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
@@ -73,7 +73,7 @@ export default function Login() {
 
           <View className="relative">
             <TextInput
-              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg pr-12"
+              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md pr-12"
               value={password}
               onChangeText={(text) => setPassword(text)}
               placeholder="Password"
@@ -96,7 +96,7 @@ export default function Login() {
           <View className="opacity-50">
             <Text className="text-center">
               Forgot Password?{" "}
-              <Link href="/" className="text-rich-plum">
+              <Link href="/forgetPassword" className="text-rich-plum">
                 Reset Here
               </Link>
             </Text>

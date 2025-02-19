@@ -92,7 +92,7 @@ export default function SignUp() {
         <Header />
         <View className="gap-5 w-full px-5 pt-5">
           <TextInput
-            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md"
             value={name}
             onChangeText={(text) => setName(text)}
             placeholder="Full Name"
@@ -101,7 +101,7 @@ export default function SignUp() {
           />
 
           <TextInput
-            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg"
+            className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md"
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
@@ -111,7 +111,7 @@ export default function SignUp() {
 
           <View className="relative">
             <TextInput
-              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-lg pr-12"
+              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md pr-12"
               value={password}
               onChangeText={(text) => setPassword(text)}
               placeholder="Password"
