@@ -32,6 +32,8 @@ export const signUpAction = async ({
     email: email,
     password: password,
     options: {
+      emailRedirectTo:
+        "https://ffzljrapzzjpcjsfupeh.supabase.co/functions/v1/email-verified",
       data: {
         name: name,
         expo_push_token: expoPushToken,
