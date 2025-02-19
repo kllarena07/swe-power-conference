@@ -253,7 +253,7 @@ export default function CameraScanner() {
     <View className="relative flex-1 justify-center">
       <SelectionScreen />
       <CameraScreen />
-      <View className="absolute bottom-0 right-0 bg-[hsla(278,41%,74%,1)] w-1/4 h-[1.5px]" />
+      <View className="absolute bottom-0 right-[20%] bg-[hsla(278,41%,74%,1)] w-1/5 h-[1.5px]" />
     </View>
   );
 }
