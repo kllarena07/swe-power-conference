@@ -4,28 +4,39 @@
     "slug": "swe-power-conference",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/powerappicons/ios/AppIcon-29.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/powerappicons/ios/AppIcon-29.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kllarena07.swepowerconference",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "pushNotifications": {
+        "scope": "device"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/powerappicons/ios/AppIcon-29.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/powerappicons/ios/AppIcon-29.png"
     },
     "plugins": [
       "expo-router",
@@ -40,6 +51,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0dd58f8f-e9d1-4000-a256-dcc82afa668b"
+      }
     }
   }
 }
