@@ -1,4 +1,4 @@
-import createEdgeClient from "../../_shared/edge-client.ts";
+import createEdgeClient from "../_shared/edge-client.ts";
 
 Deno.serve(async (req) => {
   const supabase = createEdgeClient(req);
