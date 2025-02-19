@@ -1,16 +1,4 @@
-import createEdgeClient from "../_shared/edge-client.ts";
-
-export type ProfileData = {
-  id: number;
-  created_at: string;
-  name: string;
-  email: string;
-  points: number;
-  checked_in: boolean;
-  is_admin: boolean;
-  expo_push_token: string;
-  user_id: string;
-};
+import createEdgeClient from "../../_shared/edge-client.ts";
 
 Deno.serve(async (req) => {
   const supabase = createEdgeClient(req);
@@ -44,7 +32,7 @@ Deno.serve(async (req) => {
     }
 
     const notifications = userProfiles.map((
-      { expo_push_token }: ProfileData,
+      { expo_push_token },
     ) => ({
       to: expo_push_token,
       sound: "default",
