@@ -19,6 +19,7 @@ export type ProfileData = {
 interface AuthProps {
   user: User | undefined;
   profileData: ProfileData | undefined;
+  accessToken: string;
   onLogin: (email: string, password: string) => Promise<ActionRedirect>;
   onLogout: () => Promise<ActionRedirect>;
 }
@@ -41,11 +42,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     undefined
   );
   const [session, setSession] = useState<Session | null>(null);
+  const [accessToken, setAccessToken] = useState<
+    Session["access_token"] | undefined
+  >(undefined);
 
-  // Fetch the current session on mount and subscribe to auth state changes
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
+      setAccessToken(session?.access_token);
       if (session?.user) {
         setUser(session.user);
       }
@@ -55,20 +59,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+      setAccessToken(session?.access_token);
       if (session?.user) {
         setUser(session.user);
       } else {
         setUser(undefined);
-        setProfileData(undefined); // Reset profile data on logout
+        setProfileData(undefined);
+        setAccessToken(undefined);
       }
     });
 
     return () => subscription?.unsubscribe();
   }, []);
 
-  // Fetch and subscribe to the profile data for the logged-in user
   useEffect(() => {
     if (!user?.id) return;
+
+    if (session) setAccessToken(session.access_token);
 
     const fetchProfileData = async () => {
       const { data, error } = await supabase
@@ -161,6 +168,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     setUser(undefined);
     setProfileData(undefined);
+    setAccessToken(undefined);
 
     return {
       type: "success",
@@ -175,6 +183,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onLogout: logout,
     user,
     profileData,
+    accessToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
