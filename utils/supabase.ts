@@ -40,9 +40,13 @@ const secureStorage: SecureStorageAdapter = {
   },
   removeItem: async (key: string): Promise<void> => {
     try {
-      await EncryptedStorage.removeItem(key);
+      const exists = await EncryptedStorage.getItem(key);
+      if (exists) {
+        await EncryptedStorage.removeItem(key);
+      }
     } catch (error) {
       console.error(`Error removing key "${key}":`, error);
+      console.warn(`Unable to remove item from secure storage: ${error}`);
     }
   },
 };
