@@ -61,7 +61,6 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log("Expo Push Token:", pushTokenString);
       return pushTokenString;
     } catch (e) {
       handleRegistrationError(`${e}`);
@@ -74,8 +73,7 @@ async function registerForPushNotificationsAsync() {
 export default function Index() {
   useEffect(() => {
     (async () => {
-      const token = await registerForPushNotificationsAsync();
-      console.log("Registered Expo Push Token:", token);
+      await registerForPushNotificationsAsync();
     })();
   }, []);
 
