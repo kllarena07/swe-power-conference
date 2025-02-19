@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import MessageCard from "@/components/MessageCard";
@@ -21,7 +22,7 @@ export default function Messages() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
-  const { profileData } = useAuth();
+  const { profileData, accessToken } = useAuth();
 
   const tap = Gesture.Tap()
     .numberOfTaps(2)
@@ -30,8 +31,42 @@ export default function Messages() {
       setIsModalVisible(false);
     });
 
-  const handleSendMessage = () => {
-    // send message logic here
+  const handleSendMessage = async () => {
+    try {
+      const data = {
+        subject: modalTitle,
+        message: modalContent,
+      };
+
+      if (!modalTitle.trim() || !modalContent.trim()) {
+        Alert.alert("Title and content cannot be empty");
+        return;
+      }
+
+      console.log("Send attempt at:", new Date().toISOString());
+
+      const response = await fetch(
+        "https://ffzljrapzzjpcjsfupeh.supabase.co/functions/v1/send-notif",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        Alert.alert("Failed to send message", response.statusText);
+      }
+
+      setModalTitle("");
+      setModalContent("");
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error("Send error:", error);
+    }
   };
 
   return (
