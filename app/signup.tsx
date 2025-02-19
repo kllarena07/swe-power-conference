@@ -13,6 +13,8 @@ import {
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { signUpAction } from "@/utils/signup";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 
 function Header() {
   return (
@@ -39,6 +41,11 @@ function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   );
 }
 
+function handleRegistrationError(errorMessage: string | undefined) {
+  alert(errorMessage);
+  throw new Error(errorMessage);
+}
+
 export default function SignUp() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -47,19 +54,36 @@ export default function SignUp() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSignUp = async () => {
-    const { type, path, message } = await signUpAction({
-      name,
-      email,
-      password,
-    });
-
-    if (type === "error") {
-      Alert.alert(type, message);
-      return;
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
+    if (!projectId) {
+      handleRegistrationError("Project ID not found");
     }
+    try {
+      const expoPushToken = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data;
 
-    Alert.alert(type, message);
-    router.replace(path);
+      const { type, path, message } = await signUpAction({
+        name,
+        email,
+        password,
+        expoPushToken,
+      });
+
+      if (type === "error") {
+        Alert.alert(type, message);
+        return;
+      }
+
+      Alert.alert(type, message);
+      router.replace(path);
+    } catch (e) {
+      handleRegistrationError(`${e}`);
+    }
   };
 
   return (
