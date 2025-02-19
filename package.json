@@ -38,7 +38,10 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.13",
     "react-qr-code": "^2.0.15",
-    "expo-dev-client": "~5.0.12"
+    "expo-dev-client": "~5.0.12",
+    "expo-notifications": "~0.29.13",
+    "expo-device": "~7.0.2",
+    "expo-constants": "~17.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

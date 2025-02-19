@@ -5,6 +5,7 @@ export type SignUpActionProps = {
   name: string;
   email: string;
   password: string;
+  expoPushToken: string;
 };
 
 export type SignUpRedirect = {
@@ -17,6 +18,7 @@ export const signUpAction = async ({
   name,
   email,
   password,
+  expoPushToken,
 }: SignUpActionProps): Promise<SignUpRedirect> => {
   if (!email || !password) {
     return {
@@ -32,7 +34,7 @@ export const signUpAction = async ({
     options: {
       data: {
         name: name,
-        expo_push_token: "", // expo push token here
+        expo_push_token: expoPushToken,
       },
     },
   });
