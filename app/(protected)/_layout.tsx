@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Tabs } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 
@@ -91,6 +91,22 @@ export default function TabLayout() {
                 name="camera-alt"
                 size={32}
                 color={getIconColor("camera")}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="raffle"
+          options={{
+            tabBarItemStyle: {
+              display: profileData?.is_admin ? "flex" : "none",
+            },
+            tabBarLabel: "",
+            tabBarIcon: () => (
+              <MaterialCommunityIcons
+                name="crown"
+                size={32}
+                color={getIconColor("raffle")}
               />
             ),
           }}

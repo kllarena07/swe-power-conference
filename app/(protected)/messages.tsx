@@ -17,6 +17,7 @@ import {
   GestureDetector,
 } from "react-native-gesture-handler";
 import { useAuth } from "@/context/AuthContext";
+import { sendPushNotification } from "@/utils/push-notif";
 
 export default function Messages() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,11 +34,6 @@ export default function Messages() {
 
   const handleSendMessage = async () => {
     try {
-      const data = {
-        subject: modalTitle,
-        message: modalContent,
-      };
-
       if (!modalTitle.trim() || !modalContent.trim()) {
         Alert.alert("Title and content cannot be empty");
         return;
@@ -45,17 +41,11 @@ export default function Messages() {
 
       console.log("Send attempt at:", new Date().toISOString());
 
-      const response = await fetch(
-        "https://ffzljrapzzjpcjsfupeh.supabase.co/functions/v1/send-notif",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await sendPushNotification({
+        subject: modalTitle,
+        message: modalContent,
+        accessToken: accessToken,
+      });
 
       if (!response.ok) {
         Alert.alert("Failed to send message", response.statusText);
@@ -168,7 +158,7 @@ export default function Messages() {
       </View>
       <View
         className={`absolute bottom-0 left-0 bg-[hsla(278,41%,74%,1)] ${
-          profileData?.is_admin ? "w-1/4" : "w-1/3"
+          profileData?.is_admin ? "w-1/5" : "w-1/3"
         } h-[1.5px]`}
       />
     </GestureHandlerRootView>
