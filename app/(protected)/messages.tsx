@@ -216,14 +216,17 @@ export default function Messages() {
           ) : undefined}
           {messages.length > 0 ? (
             <ScrollView className="px-10">
-              {messages.map(({ id, title, description, created_at }) => (
-                <MessageCard
-                  key={id}
-                  title={title}
-                  content={description}
-                  time={new Date(created_at)}
-                />
-              ))}
+              {messages
+                .slice()
+                .reverse()
+                .map(({ id, title, description, created_at }) => (
+                  <MessageCard
+                    key={id}
+                    title={title}
+                    content={description}
+                    time={new Date(created_at)}
+                  />
+                ))}
             </ScrollView>
           ) : (
             <Text className="text-center">
