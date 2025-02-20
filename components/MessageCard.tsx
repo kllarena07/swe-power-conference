@@ -25,7 +25,7 @@ export default function MessageCard({
   }, [time]);
 
   return (
-    <View className="gap-2 border-b border-[hsla(0,0%,91%,1)]">
+    <View className="gap-2 pb-5 border-b border-[hsla(0,0%,91%,1)]">
       <View className="flex flex-row justify-between items-center">
         <Text className="font-bold text-xl">{title}</Text>
         <Text className="text-[hsla(0,0%,74%,1)]">{timeDifference}m ago</Text>
