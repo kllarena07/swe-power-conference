@@ -9,10 +9,12 @@ import {
   Keyboard,
   TouchableOpacityProps,
   Alert,
+  Button,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
+import * as Linking from "expo-linking";
 
 function Header() {
   return (
@@ -93,13 +95,18 @@ export default function Login() {
             </TouchableOpacity>
           </View>
 
-          <View className="opacity-50">
-            <Text className="text-center">
-              Forgot Password?{" "}
-              <Link href="/forgetPassword" className="text-rich-plum">
-                Reset Here
-              </Link>
-            </Text>
+          <View className="opacity-50 flex flex-row justify-center gap-1">
+            <Text className="text-center">Forgot Password?</Text>
+            <TouchableOpacity
+              className="items-center justify-center"
+              onPress={() =>
+                Linking.openURL(
+                  "https://power-reset-password.vercel.app/forgot-password"
+                )
+              }
+            >
+              <Text className="text-rich-plum">Reset Here</Text>
+            </TouchableOpacity>
           </View>
           <LoginButton onPress={handleLogin} />
         </View>
