@@ -8,7 +8,7 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MessageCard from "@/components/MessageCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
@@ -18,12 +18,77 @@ import {
 } from "react-native-gesture-handler";
 import { useAuth } from "@/context/AuthContext";
 import { sendPushNotification } from "@/utils/push-notif";
+import { createMessage } from "@/utils/create-message";
+import { supabase } from "@/utils/supabase";
+
+type MessageItem = {
+  created_at: string;
+  title: string;
+  description: string;
+  id: number;
+};
 
 export default function Messages() {
+  const [messages, setMessages] = useState<MessageItem[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
   const { profileData, accessToken } = useAuth();
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data, error } = await supabase.from("messages").select("*");
+
+      if (error) {
+        console.error("Error fetching messages:", error);
+        return;
+      }
+
+      if (data) {
+        setMessages(data);
+      }
+    };
+
+    fetchMessages();
+
+    const channel = supabase
+      .channel("messages-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "messages" },
+        (payload) => {
+          setMessages((prevMessages) => {
+            let updatedMessages = [...prevMessages];
+
+            switch (payload.eventType) {
+              case "INSERT":
+                if (!prevMessages.some((msg) => msg.id === payload.new.id)) {
+                  updatedMessages.push(payload.new as MessageItem);
+                }
+                break;
+              case "UPDATE":
+                updatedMessages = prevMessages.map((msg) =>
+                  msg.id === payload.new.id ? (payload.new as MessageItem) : msg
+                );
+                break;
+              case "DELETE":
+                updatedMessages = prevMessages.filter(
+                  (msg) => msg.id !== payload.old.id
+                );
+                break;
+              default:
+                return prevMessages;
+            }
+            return updatedMessages;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      void channel.unsubscribe();
+    };
+  }, []);
 
   const tap = Gesture.Tap()
     .numberOfTaps(2)
@@ -40,6 +105,11 @@ export default function Messages() {
       }
 
       console.log("Send attempt at:", new Date().toISOString());
+
+      await createMessage({
+        title: modalTitle,
+        description: modalContent,
+      });
 
       const response = await sendPushNotification({
         subject: modalTitle,
@@ -144,16 +214,22 @@ export default function Messages() {
               />
             </TouchableOpacity>
           ) : undefined}
-          <ScrollView className="px-10">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <MessageCard
-                key={index}
-                title="Important"
-                content="Lunch time has been slightly moved to 2pm"
-                time={new Date(new Date().setHours(22, 37, 0))}
-              />
-            ))}
-          </ScrollView>
+          {messages.length > 0 ? (
+            <ScrollView className="px-10">
+              {messages.map(({ id, title, description, created_at }) => (
+                <MessageCard
+                  key={id}
+                  title={title}
+                  content={description}
+                  time={new Date(created_at)}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <Text className="text-center">
+              There are no messages available.
+            </Text>
+          )}
         </SafeAreaView>
       </View>
       <View
