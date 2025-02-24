@@ -9,7 +9,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
+      "image": "./assets/powerappicons/splash-screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
