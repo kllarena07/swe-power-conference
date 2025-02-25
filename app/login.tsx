@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -14,6 +13,7 @@ import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
 import * as Linking from "expo-linking";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function Header() {
   return (

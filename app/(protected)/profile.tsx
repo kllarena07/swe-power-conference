@@ -1,15 +1,9 @@
-import {
-  Text,
-  SafeAreaView,
-  View,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-qr-code";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
   const { onLogout, profileData } = useAuth();

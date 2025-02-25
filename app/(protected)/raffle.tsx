@@ -2,14 +2,9 @@ import { ProfileData, useAuth } from "@/context/AuthContext";
 import { sendPushNotification } from "@/utils/push-notif";
 import { supabase } from "@/utils/supabase";
 import { useRef, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import ConfettiCannon from "react-native-confetti-cannon";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Raffle() {
   const [winner, setWinner] = useState<ProfileData["name"]>("");

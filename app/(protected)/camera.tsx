@@ -2,14 +2,8 @@ import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useReducer, useRef } from "react";
-import {
-  Alert,
-  Button,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Button, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type CameraMode = "check-in" | "points" | null;
 

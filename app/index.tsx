@@ -1,16 +1,11 @@
-import {
-  ImageBackground,
-  SafeAreaView,
-  Text,
-  View,
-  Platform,
-} from "react-native";
+import { ImageBackground, Text, View, Platform } from "react-native";
 import React, { useEffect } from "react";
 import { Image } from "react-native";
 import { Link } from "expo-router";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

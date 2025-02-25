@@ -1,8 +1,9 @@
-import { SafeAreaView, Text, ScrollView, View } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import AgendaItem, { AgendaItemType } from "@/components/AgendaItem";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const [agendaItems, setAgendaItems] = useState<AgendaItemType[]>([]);

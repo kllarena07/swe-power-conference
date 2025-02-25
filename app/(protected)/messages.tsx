@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   Text,
   View,
   ScrollView,
@@ -20,6 +19,7 @@ import { useAuth } from "@/context/AuthContext";
 import { sendPushNotification } from "@/utils/push-notif";
 import { createMessage } from "@/utils/create-message";
 import { supabase } from "@/utils/supabase";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type MessageItem = {
   created_at: string;
