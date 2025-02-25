@@ -1,16 +1,16 @@
 import { ProfileData, useAuth } from "@/context/AuthContext";
 import { sendPushNotification } from "@/utils/push-notif";
 import { supabase } from "@/utils/supabase";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { View, Text, Alert } from "react-native";
-import ConfettiCannon from "react-native-confetti-cannon";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Confetti } from "react-native-fast-confetti";
 
 export default function Raffle() {
   const [winner, setWinner] = useState<ProfileData["name"]>("");
+  const [showConfetti, setShowConfetti] = useState(false);
   const { accessToken } = useAuth();
-  const confettiRef = useRef<ConfettiCannon | null>(null);
 
   const runRaffle = async () => {
     console.log("Running raffle...");
@@ -53,7 +53,7 @@ export default function Raffle() {
             return;
           }
 
-          if (confettiRef.current) confettiRef.current.start();
+          setShowConfetti(true);
         } catch (err: any) {
           Alert.alert("Error selecting raffle winner", err);
         }
@@ -69,15 +69,7 @@ export default function Raffle() {
       </TouchableOpacity>
       <Text className="text-lg">The winner is: {winner}</Text>
       <View className="absolute bottom-0 right-0 bg-[hsla(278,41%,74%,1)] w-1/5 h-[1.5px]" />
-      <ConfettiCannon
-        count={200}
-        origin={{ x: 0, y: 0 }}
-        ref={confettiRef}
-        autoStart={false}
-        fallSpeed={2500}
-        explosionSpeed={800}
-        fadeOut={true}
-      />
+      {showConfetti && <Confetti />}
     </SafeAreaView>
   );
 }
