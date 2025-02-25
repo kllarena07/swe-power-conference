@@ -2,7 +2,7 @@
   "expo": {
     "name": "POWER",
     "slug": "swe-power-conference",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
     "scheme": "myapp",
@@ -13,17 +13,28 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-      "bundleIdentifier": "com.kllarena07.swepowerconference",
-      "config": {
-        "usesNonExemptEncryption": false
-      },
-      "pushNotifications": {
-        "scope": "device"
+    "bundleIdentifier": "com.kllarena07.swepowerconference",
+    "config": {
+      "usesNonExemptEncryption": false
+    },
+    "pushNotifications": {
+      "scope": "device"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0dd58f8f-e9d1-4000-a256-dcc82afa668b"
       }
     },
     "ios": {
-      "buildNumber": "2",
-      "supportsTablet": true,
+      "bundleIdentifier": "com.kllarena07.swepowerconference",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
+  },
+  "ios": {
+    "buildNumber": "2",
+    "supportsTablet": true,
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
