@@ -13,8 +13,6 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "ios": {
-      "supportsTablet": true,
       "bundleIdentifier": "com.kllarena07.swepowerconference",
       "config": {
         "usesNonExemptEncryption": false
@@ -23,6 +21,9 @@
         "scope": "device"
       }
     },
+    "ios": {
+      "buildNumber": "2",
+      "supportsTablet": true,
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
