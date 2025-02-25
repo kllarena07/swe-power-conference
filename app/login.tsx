@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacityProps,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, Keyboard, Alert } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  TouchableOpacityProps,
+} from "react-native-gesture-handler";
 
 function Header() {
   return (

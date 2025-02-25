@@ -2,7 +2,6 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity,
   TextInput,
   Keyboard,
   Alert,
@@ -20,6 +19,7 @@ import { sendPushNotification } from "@/utils/push-notif";
 import { createMessage } from "@/utils/create-message";
 import { supabase } from "@/utils/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type MessageItem = {
   created_at: string;
