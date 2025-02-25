@@ -9,7 +9,6 @@ import {
   Keyboard,
   TouchableOpacityProps,
   Alert,
-  Button,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
