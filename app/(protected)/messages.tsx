@@ -5,6 +5,7 @@ import {
   TextInput,
   Keyboard,
   Alert,
+  GestureResponderEvent,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import MessageCard from "@/components/MessageCard";
@@ -149,12 +150,12 @@ export default function Messages() {
           >
             <TouchableOpacity
               activeOpacity={1}
-              onPress={(e) => e.stopPropagation()}
+              onPress={(e?: GestureResponderEvent) => e?.stopPropagation()}
               className="bg-white p-4 rounded-lg w-4/5 rounded-3xl"
             >
               <TouchableOpacity
                 activeOpacity={1}
-                onPress={(e) => e.stopPropagation()}
+                onPress={(e?: GestureResponderEvent) => e?.stopPropagation()}
                 className="bg-white rounded-lg"
               >
                 <MaterialIcons
