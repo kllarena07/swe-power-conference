@@ -4,6 +4,7 @@ import { Stack, usePathname, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import "react-native-gesture-handler";
 
 import "../global.css";
 import { StatusBar } from "react-native";
