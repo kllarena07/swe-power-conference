@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "name": "POWER",
     "slug": "swe-power-conference",
     "version": "1.0.0",
@@ -14,6 +15,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "jsEngine": "jsc",
       "bundleIdentifier": "com.kllarena07.swepowerconference",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
