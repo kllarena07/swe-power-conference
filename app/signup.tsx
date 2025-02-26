@@ -30,7 +30,14 @@ function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
       {...props}
-      className="w-full items-center justify-center bg-rich-plum rounded-lg py-4"
+      style={{
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#82599a",
+        borderRadius: 10,
+        paddingVertical: 16,
+      }}
     >
       <Text className="text-white text-xl font-bold">Sign Up</Text>
     </TouchableOpacity>
@@ -105,9 +112,9 @@ export default function SignUp() {
             textAlignVertical="center"
           />
 
-          <View className="relative">
+          <View className="flex flex-row relative">
             <TextInput
-              className="rounded-lg p-4 bg-light-gray border border-gray-300 text-md pr-12"
+              className="grow rounded-l-lg p-4 bg-light-gray border border-gray-300 border-r-0 text-md"
               value={password}
               onChangeText={(text) => setPassword(text)}
               placeholder="Password"
@@ -115,16 +122,17 @@ export default function SignUp() {
               secureTextEntry={!isPasswordVisible}
               textAlignVertical="center"
             />
-            <TouchableOpacity
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              className="absolute right-4 top-5"
-            >
-              <MaterialIcons
-                name={isPasswordVisible ? "visibility" : "visibility-off"}
-                size={24}
-                color="hsla(0, 0%, 74%, 1)"
-              />
-            </TouchableOpacity>
+            <View className="grow-0 justify-center bg-light-gray pr-2 border-gray-300 border border-l-0 rounded-r-lg">
+              <TouchableOpacity
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              >
+                <MaterialIcons
+                  name={isPasswordVisible ? "visibility" : "visibility-off"}
+                  size={24}
+                  color="hsla(0, 0%, 74%, 1)"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <SignUpButton onPress={handleSignUp} />
