@@ -1,7 +1,7 @@
 import { Stack, usePathname, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import "../global.css";
 import { StatusBar } from "react-native";
@@ -44,16 +44,18 @@ function StackLayout() {
             : "dark-content"
         }
       />
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="signup" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(protected)"
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="signup" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(protected)"
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </GestureHandlerRootView>
     </>
   );
 }
