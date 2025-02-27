@@ -6,10 +6,12 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "jsEngine": "hermes"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "jsEngine": "hermes"
     },
     "production": {
       "extends": "default",
