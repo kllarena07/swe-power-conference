@@ -2,7 +2,7 @@ import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useReducer, useRef } from "react";
-import { Alert, Button, Text, View } from "react-native";
+import { Alert, Button, Platform, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -114,21 +114,25 @@ export default function CameraScanner() {
   };
 
   const showPointPrompt = (id: string) => {
-    Alert.prompt(
-      "Enter the number of points to add",
-      "Please enter a nonnegative number:",
-      (text) => {
-        const number = parseFloat(text);
-        if (isNaN(number) || number < 0) {
-          Alert.alert("Invalid Input", "Please enter a nonnegative number!", [
-            { text: "Try Again", onPress: () => showPointPrompt(id) },
-          ]);
-        } else {
-          addPoints(id, number);
-        }
-      },
-      "plain-text"
-    );
+    if (Platform.OS === "ios") {
+      Alert.prompt(
+        "Enter the number of points to add",
+        "Please enter a nonnegative number:",
+        (text) => {
+          const number = parseFloat(text);
+          if (isNaN(number) || number < 0) {
+            Alert.alert("Invalid Input", "Please enter a nonnegative number!", [
+              { text: "Try Again", onPress: () => showPointPrompt(id) },
+            ]);
+          } else {
+            addPoints(id, number);
+          }
+        },
+        "plain-text"
+      );
+    } else {
+      Alert.alert("Feature not available. Please use iOS");
+    }
   };
 
   const addPoints = async (id: string, pointVal: number) => {
