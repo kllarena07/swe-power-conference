@@ -85,10 +85,10 @@ export default function Index() {
         />
 
         <View className="w-4/5 gap-5">
-          <Text className="text-center text-[hsla(40,36%,88%,1)] text-3xl font-[Kurale]">
+          <Text className="text-center text-cream text-3xl font-kurale">
             Welcome to UMD's {"\n"} Power 2025 Conference
           </Text>
-          <Text className="text-center text-lg text-[hsla(6,48%,85%,1)] font-[Inter]">
+          <Text className="text-center text-lg text-light-beige font-[Inter]">
             Rise Together{"\n"}
             Empower Each Other{"\n"}
             Reign as One
@@ -98,13 +98,13 @@ export default function Index() {
         <View className="w-4/5 gap-5">
           <Link
             href="/signup"
-            className="w-full p-5 bg-[hsla(40,36%,88%,1)] rounded-lg text-[hsla(278,27%,48%,1)] text-center font-bold text-xl"
+            className="w-full p-5 bg-cream rounded-lg text-rich-plum text-center font-bold text-xl"
           >
             Sign Up
           </Link>
           <Link
             href="/login"
-            className="w-full p-5 border-4 rounded-lg border-[hsla(40,36%,88%,1)] text-[hsla(40,36%,88%,1)] font-bold text-center text-xl"
+            className="w-full p-5 border-4 rounded-lg border-cream text-cream font-bold text-center text-xl"
           >
             Login
           </Link>
