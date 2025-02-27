@@ -6,9 +6,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 import { StatusBar } from "react-native";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import AppSplashScreen from "@/components/SplashScreen";
 
 export { ErrorBoundary } from "expo-router";
+
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   return (
@@ -23,13 +26,13 @@ function StackLayout() {
   const segments = useSegments();
   const router = useRouter();
   const currentRoute = usePathname();
-  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    SplashScreen.hideAsync();
+  });
 
   // Handle navigation based on auth state
   useEffect(() => {
-    // Skip navigation if not initialized yet or auth status is still initializing
-    if (!isInitialized || authStatus === "initializing") return;
-
     const inAuthGroup = segments[0] === "(protected)";
 
     if (authStatus === "unauthenticated" && inAuthGroup) {
@@ -39,22 +42,7 @@ function StackLayout() {
       console.log("Authorized", segments);
       router.replace("/(protected)");
     }
-  }, [authStatus, segments, isInitialized]);
-
-  // Function to handle when initialization is complete
-  const handleInitializationComplete = () => {
-    console.log("App initialization complete, auth state:", authStatus);
-    setIsInitialized(true);
-  };
-
-  // Show splash screen until initialization is complete
-  if (!isInitialized) {
-    return (
-      <AppSplashScreen
-        onInitializationComplete={handleInitializationComplete}
-      />
-    );
-  }
+  }, [authStatus, segments]);
 
   return (
     <>
