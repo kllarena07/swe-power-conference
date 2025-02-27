@@ -6,17 +6,14 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "jsEngine": "hermes"
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "jsEngine": "hermes"
+      "distribution": "internal"
     },
     "production": {
       "extends": "default",
-      "autoIncrement": true,
-      "jsEngine": "hermes"
+      "autoIncrement": true
     }
   }
 }
