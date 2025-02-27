@@ -9,11 +9,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/powerappicons/splash-screen.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "bundleIdentifier": "com.kllarena07.swepowerconference",
       "infoPlist": {
