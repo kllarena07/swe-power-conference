@@ -183,13 +183,21 @@ export default function CameraScanner() {
       <View className="gap-5">
         <Text className="text-3xl font-bold">Select a Camera Mode</Text>
         <TouchableOpacity
-          className="bg-black p-5 rounded-md"
+          style={{
+            backgroundColor: "black",
+            padding: 16,
+            borderRadius: 6,
+          }}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "check-in" })}
         >
           <Text className="text-white font-bold text-center">Check-In</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-black p-5 rounded-md"
+          style={{
+            backgroundColor: "black",
+            padding: 16,
+            borderRadius: 6,
+          }}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "points" })}
         >
           <Text className="text-white font-bold text-center">
