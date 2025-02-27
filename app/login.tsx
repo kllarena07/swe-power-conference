@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Keyboard } from "react-native";
+import { View, Text, TextInput, Keyboard, Alert } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -48,18 +48,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  // const { onLogin } = useAuth();
+  const { onLogin } = useAuth();
 
   const handleLogin = async () => {
-    // const { type, path, message } = await onLogin!(email, password);
+    const { type, path, message } = await onLogin!(email, password);
 
-    // if (type === "error") {
-    //   Alert.alert(type, message);
-    //   return;
-    // }
+    if (type === "error") {
+      Alert.alert(type, message);
+      return;
+    }
 
-    // router.replace(path);
-    router.replace("/(protected)/");
+    router.replace(path);
   };
 
   return (

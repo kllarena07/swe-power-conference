@@ -1,11 +1,11 @@
-import { Stack, usePathname, useSegments } from "expo-router";
+import { Stack, usePathname, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import "../global.css";
 import { StatusBar } from "react-native";
-// import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -28,30 +28,29 @@ export default function RootLayout() {
   }
 
   return (
-    <StackLayout />
-    // <AuthProvider>
-    // </AuthProvider>
+    <AuthProvider>
+      <StackLayout />
+    </AuthProvider>
   );
 }
 
 function StackLayout() {
-  // const { authStatus } = useAuth();
+  const { authStatus } = useAuth();
   const segments = useSegments();
-  // const router = useRouter();
+  const router = useRouter();
   const currentRoute = usePathname();
 
-  // Handle navigation based on auth state
-  // useEffect(() => {
-  //   const inAuthGroup = segments[0] === "(protected)";
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(protected)";
 
-  //   if (authStatus === "unauthenticated" && inAuthGroup) {
-  //     console.log("Not authorized!", segments);
-  //     router.replace("/login");
-  //   } else if (authStatus === "authenticated" && !inAuthGroup) {
-  //     console.log("Authorized", segments);
-  //     router.replace("/(protected)");
-  //   }
-  // }, [authStatus, segments]);
+    if (authStatus === "unauthenticated" && inAuthGroup) {
+      console.log("Not authorized!", segments);
+      router.replace("/login");
+    } else if (authStatus === "authenticated" && !inAuthGroup) {
+      console.log("Authorized", segments);
+      router.replace("/(protected)");
+    }
+  }, [authStatus, segments]);
 
   return (
     <>
