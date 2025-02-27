@@ -10,11 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import MessageCard from "@/components/MessageCard";
 import { MaterialIcons } from "@expo/vector-icons";
-import {
-  GestureHandlerRootView,
-  Gesture,
-  GestureDetector,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useAuth } from "@/context/AuthContext";
 import { sendPushNotification } from "@/utils/push-notif";
 import { createMessage } from "@/utils/create-message";
@@ -131,7 +127,7 @@ export default function Messages() {
   };
 
   return (
-    <GestureHandlerRootView className="relative">
+    <>
       {isModalVisible ? (
         <GestureDetector gesture={tap}>
           <TouchableOpacity
@@ -139,82 +135,79 @@ export default function Messages() {
             onPress={() => {
               Keyboard.dismiss();
             }}
-            className="absolute bg-transparent justify-center items-center w-full h-full z-50"
             style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "transparent",
+              paddingHorizontal: 20,
+              justifyContent: "center",
             }}
           >
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={(e?: GestureResponderEvent) => e?.stopPropagation()}
-              className="bg-white p-4 rounded-lg w-4/5 rounded-3xl"
-            >
+            <View className="bg-white p-5 rounded-2xl">
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={(e?: GestureResponderEvent) => e?.stopPropagation()}
-                className="bg-white rounded-lg"
               >
-                <MaterialIcons
-                  name="close"
-                  size={24}
-                  color="hsla(0,0%,74%,1)"
-                  onPress={() => setIsModalVisible(false)}
-                  className="self-end"
-                />
-              </TouchableOpacity>
-              <View className="gap-5">
-                <Text className="text-3xl font-bold">Compose</Text>
-                <TextInput
-                  placeholder="Title"
-                  onChangeText={(text) => setModalTitle(text)}
-                  value={modalTitle}
-                  className="border border-gray-200 bg-gray-100 rounded-lg py-4 px-3"
-                />
-                <TextInput
-                  placeholder="Type your message here..."
-                  multiline={true}
-                  numberOfLines={10}
-                  textAlignVertical="top"
-                  onChangeText={(text) => setModalContent(text)}
-                  value={modalContent}
-                  className="border border-gray-200 bg-gray-100 rounded-lg py-4 px-3 h-48"
-                />
                 <TouchableOpacity
-                  className="bg-[hsla(278,27%,48%,1)] rounded-lg"
-                  onPress={handleSendMessage}
+                  activeOpacity={1}
+                  onPress={() => setIsModalVisible(false)}
+                  style={{
+                    alignSelf: "flex-end",
+                  }}
                 >
-                  <Text className="font-bold text-white p-5 text-center">
-                    Send
-                  </Text>
+                  <MaterialIcons
+                    name="close"
+                    size={24}
+                    color="hsla(0,0%,74%,1)"
+                  />
                 </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
+                <View className="gap-5">
+                  <Text className="text-3xl font-bold">Compose</Text>
+                  <TextInput
+                    placeholder="Title"
+                    onChangeText={(text) => setModalTitle(text)}
+                    value={modalTitle}
+                    className="border border-gray-200 bg-gray-100 rounded-lg py-4 px-3"
+                  />
+                  <TextInput
+                    placeholder="Type your message here..."
+                    multiline={true}
+                    numberOfLines={10}
+                    textAlignVertical="top"
+                    onChangeText={(text) => setModalContent(text)}
+                    value={modalContent}
+                    className="border border-gray-200 bg-gray-100 rounded-lg py-4 px-3 h-48"
+                  />
+                  <TouchableOpacity
+                    onPress={handleSendMessage}
+                    style={{
+                      backgroundColor: "#82599a",
+                    }}
+                  >
+                    <Text className="font-bold text-white p-5 text-center">
+                      Send
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         </GestureDetector>
       ) : undefined}
 
-      <View className={`relative ${isModalVisible ? "opacity-50" : ""}`}>
-        <SafeAreaView className="relative bg-white h-full">
+      <View
+        className={`${
+          isModalVisible ? "absolute w-full h-full z-[-1]" : "relative"
+        }`}
+      >
+        <SafeAreaView
+          className={`relative bg-white h-full ${
+            isModalVisible ? "opacity-50" : ""
+          }`}
+        >
           <Text className="text-4xl mt-3.5 mb-10 font-bold text-center">
             Messages
           </Text>
-          {profileData?.is_admin ? (
-            <TouchableOpacity
-              className="bg-[hsla(278,27%,48%,1)] absolute right-5 bottom-5 w-fit h-fit rounded-full z-50"
-              onPress={() => setIsModalVisible(true)}
-            >
-              <MaterialIcons
-                name="edit"
-                size={32}
-                color="white"
-                className="self-center p-3"
-              />
-            </TouchableOpacity>
-          ) : undefined}
           {messages.length > 0 ? (
             <ScrollView className="px-10">
               {messages
@@ -234,13 +227,34 @@ export default function Messages() {
               There are no messages available.
             </Text>
           )}
+
+          {profileData?.is_admin ? (
+            <View className="w-full flex">
+              <TouchableOpacity
+                style={{
+                  alignSelf: "flex-end",
+                  backgroundColor: "#82599a",
+                  borderRadius: 100,
+                  marginRight: 20,
+                }}
+                onPress={() => setIsModalVisible(true)}
+              >
+                <MaterialIcons
+                  name="edit"
+                  size={32}
+                  color="white"
+                  className="self-center p-3"
+                />
+              </TouchableOpacity>
+            </View>
+          ) : undefined}
         </SafeAreaView>
       </View>
       <View
-        className={`absolute bottom-0 left-0 bg-[hsla(278,41%,74%,1)] ${
+        className={`absolute bottom-0 left-0 bg-pastel-purple ${
           profileData?.is_admin ? "w-1/5" : "w-1/3"
         } h-[1.5px]`}
       />
-    </GestureHandlerRootView>
+    </>
   );
 }
