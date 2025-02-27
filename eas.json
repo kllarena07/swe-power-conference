@@ -12,11 +12,9 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "extends": "default",
+      "autoIncrement": true,
+      "jsEngine": "hermes"
     }
-  },
-  "production": {
-    "extends": "default",
-    "jsEngine": "hermes"
   }
 }
