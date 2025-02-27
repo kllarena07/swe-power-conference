@@ -15,7 +15,8 @@
       "autoIncrement": true
     }
   },
-  "submit": {
-    "production": {}
+  "production": {
+    "extends": "default",
+    "jsEngine": "hermes"
   }
 }
