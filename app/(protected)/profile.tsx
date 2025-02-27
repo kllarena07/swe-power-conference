@@ -50,8 +50,7 @@ export default function Profile() {
           {profileData?.checked_in ? "Checked-In ✅" : "Not Checked-In ❌"}
         </Text>
       </View>
-      <View className="flex-1 bg-gray-100 p-5 mx-4 rounded-xl mt-6 mb-5">
-        <Text className="font-bold text-xl">QR Code</Text>
+      <View className="flex-1 bg-gray-100 mx-5 rounded-xl mt-6 mb-5">
         <View className="items-center justify-center flex-1">
           {profileData ? (
             <QRCode value={profileData.user_id} />
