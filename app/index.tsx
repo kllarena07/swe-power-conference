@@ -1,4 +1,4 @@
-import { ImageBackground, Text, View, Platform } from "react-native";
+import { ImageBackground, Text, View, Platform, Alert } from "react-native";
 import React, { useEffect } from "react";
 import { Image } from "react-native";
 import { Link } from "expo-router";
@@ -15,9 +15,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-function handleRegistrationError(errorMessage: string | undefined) {
-  alert(errorMessage);
-  throw new Error(errorMessage);
+function handleRegistrationError(errorMessage: string) {
+  Alert.alert(errorMessage);
+  console.error("Push notification registration error:", errorMessage);
 }
 
 async function registerForPushNotificationsAsync() {
