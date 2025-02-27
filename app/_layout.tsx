@@ -10,10 +10,25 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 export { ErrorBoundary } from "expo-router";
 
 import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [loaded] = useFonts({
+    Kurale: require("../assets/fonts/Kurale-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <AuthProvider>
       <StackLayout />
@@ -26,10 +41,6 @@ function StackLayout() {
   const segments = useSegments();
   const router = useRouter();
   const currentRoute = usePathname();
-
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  });
 
   // Handle navigation based on auth state
   useEffect(() => {
