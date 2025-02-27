@@ -44,9 +44,9 @@ function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   );
 }
 
-function handleRegistrationError(errorMessage: string | undefined) {
-  alert(errorMessage);
-  throw new Error(errorMessage);
+function handleRegistrationError(errorMessage: string) {
+  Alert.alert(errorMessage);
+  console.error("Push notification registration error:", errorMessage);
 }
 
 export default function SignUp() {
