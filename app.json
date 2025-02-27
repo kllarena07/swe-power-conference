@@ -1,6 +1,6 @@
 {
   "expo": {
-    "jsEngine": "jsc",
+    "jsEngine": "hermes",
     "name": "POWER",
     "slug": "swe-power-conference",
     "version": "1.0.0",
