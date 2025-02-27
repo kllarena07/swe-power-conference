@@ -54,9 +54,14 @@ export default function Raffle() {
           }
 
           setShowConfetti(true);
+          setTimeout(() => {
+            setShowConfetti(false);
+          }, 7000);
         } catch (err: any) {
           Alert.alert("Error selecting raffle winner", err);
         }
+
+        break;
       }
     }
   };
@@ -64,7 +69,14 @@ export default function Raffle() {
   return (
     <SafeAreaView className="relative h-full flex justify-center items-center gap-5">
       <Text className="text-3xl font-bold">Raffle Page</Text>
-      <TouchableOpacity className="bg-black p-5 rounded-md" onPress={runRaffle}>
+      <TouchableOpacity
+        onPress={runRaffle}
+        style={{
+          backgroundColor: "black",
+          padding: 15,
+          borderRadius: 5,
+        }}
+      >
         <Text className="text-white font-bold">Draw Winner</Text>
       </TouchableOpacity>
       <Text className="text-lg">The winner is: {winner}</Text>
