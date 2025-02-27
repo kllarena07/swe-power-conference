@@ -17,7 +17,8 @@
     "ios": {
       "bundleIdentifier": "com.kllarena07.swepowerconference",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "We need access to the camera"
       },
       "buildNumber": "2",
       "supportsTablet": true
@@ -50,7 +51,7 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": false
     },
     "extra": {
       "router": {
