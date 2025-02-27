@@ -12,7 +12,6 @@
       "distribution": "internal"
     },
     "production": {
-      "extends": "default",
       "autoIncrement": true
     }
   }
