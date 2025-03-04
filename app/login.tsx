@@ -11,20 +11,6 @@ import {
   TouchableOpacityProps,
 } from "react-native-gesture-handler";
 
-function Header() {
-  return (
-    <View className="flex-row justify-between w-full py-3 px-5 items-center">
-      <Link href="/">
-        <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
-      </Link>
-      <Text className="font-bold text-3xl">Login</Text>
-      <Link href="/signup" className="text-rich-plum text-base">
-        Sign Up
-      </Link>
-    </View>
-  );
-}
-
 function LoginButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
@@ -49,6 +35,28 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { onLogin } = useAuth();
+
+  function Header() {
+    return (
+      <View className="flex-row justify-between w-full py-3 px-5 items-center">
+        <TouchableOpacity
+          onPress={() => router.replace("/")}
+          className="p-2"
+          activeOpacity={0.7}
+        >
+          <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
+        </TouchableOpacity>
+        <Text className="font-bold text-3xl">Login</Text>
+        <TouchableOpacity
+          onPress={() => router.replace("/signup")}
+          activeOpacity={0.7}
+          className="p-2"
+        >
+          <Text className="text-rich-plum text-base">Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const handleLogin = async () => {
     const { type, path, message } = await onLogin!(email, password);

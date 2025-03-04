@@ -12,20 +12,6 @@ import {
   TouchableOpacityProps,
 } from "react-native-gesture-handler";
 
-function Header() {
-  return (
-    <View className="flex-row justify-between w-full py-3 px-5 items-center">
-      <Link href="/">
-        <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
-      </Link>
-      <Text className="font-bold text-3xl">Sign Up</Text>
-      <Link href="/login" className="text-rich-plum text-base">
-        Login
-      </Link>
-    </View>
-  );
-}
-
 function SignUpButton(props: TouchableOpacityProps): JSX.Element {
   return (
     <TouchableOpacity
@@ -55,6 +41,28 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  function Header() {
+    return (
+      <View className="flex-row justify-between w-full py-3 px-5 items-center">
+        <TouchableOpacity
+          onPress={() => router.replace("/")}
+          className="p-2"
+          activeOpacity={0.7}
+        >
+          <MaterialIcons name="close" size={24} color="hsla(0, 0%, 74%, 1)" />
+        </TouchableOpacity>
+        <Text className="font-bold text-3xl">Sign Up</Text>
+        <TouchableOpacity
+          onPress={() => router.replace("/login")}
+          activeOpacity={0.7}
+          className="p-2"
+        >
+          <Text className="text-rich-plum text-base">Login</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const handleSignUp = async () => {
     const projectId =
