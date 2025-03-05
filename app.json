@@ -13,7 +13,7 @@
       "bundleIdentifier": "com.kllarena07.swepowerconference",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "We need access to the camera"
+        "NSCameraUsageDescription": "Camera access is needed for scanning QR codes of attendees at the POWER conference for check-in and point addition"
       },
       "buildNumber": "2",
       "supportsTablet": true
@@ -23,10 +23,7 @@
         "foregroundImage": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.CAMERA"],
       "package": "com.kllarena07.swepowerconference"
     },
     "web": {
@@ -39,9 +36,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera for scanning QR codes of attendees at the POWER conference for check-in and point addition",
+          "recordAudioAndroid": false
         }
       ]
     ],
