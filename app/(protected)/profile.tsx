@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-qr-code";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { deleteUserAccount } from "@/utils/delete-account";
 
 export default function Profile() {
   const { onLogout, profileData } = useAuth();
@@ -22,6 +23,32 @@ export default function Profile() {
     router.replace(path);
   };
 
+  const handleDeleteAccount = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const { success, message } = await deleteUserAccount();
+
+            if (success) {
+              await onLogout!();
+            } else {
+              Alert.alert("Error", message);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView className="relative w-full h-full bg-white">
       <Image
@@ -29,7 +56,9 @@ export default function Profile() {
         className="absolute w-full top-0"
       />
       <View className="flex-row items-center justify-between pt-3 px-5">
-        <Text className="text-white text-lg opacity-0">Settings</Text>
+        <TouchableOpacity onPress={handleDeleteAccount}>
+          <Text className="text-white text-lg">Delete</Text>
+        </TouchableOpacity>
         <Text className="text-3xl text-white font-bold">Profile</Text>
         <TouchableOpacity onPress={handleLogout}>
           <Text className="text-white text-lg">Logout</Text>
