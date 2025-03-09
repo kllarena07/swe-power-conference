@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA"],
+      "permissions": ["android.permission.CAMERA", "android.permission.RECEIVE_BOOT_COMPLETED", "android.permission.NOTIFICATIONS"],
       "package": "com.kllarena07.swepowerconference"
     },
     "web": {
@@ -43,6 +43,11 @@
     ],
     "experiments": {
       "typedRoutes": false
+    },
+    "notification": {
+      "icon": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
+      "color": "#ffffff",
+      "androidMode": "default"
     },
     "extra": {
       "router": {
