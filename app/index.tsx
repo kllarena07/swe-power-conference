@@ -75,8 +75,19 @@ async function registerForPushNotificationsAsync() {
 
 export default function Index() {
   const [error, setError] = useState("");
+  const [projectId, setProjectId] = useState("");
 
   useEffect(() => {
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
+
+    if (projectId) {
+      setProjectId(projectId);
+    } else {
+      setProjectId("No project id");
+    }
+
     (async () => {
       try {
         await registerForPushNotificationsAsync();
@@ -98,28 +109,8 @@ export default function Index() {
           resizeMode="contain"
         />
 
-        {error !== "" && (
-          <Modal visible={true} transparent animationType="slide">
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  padding: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <Text>{error}</Text>
-              </View>
-            </View>
-          </Modal>
-        )}
+        <Text>{projectId}</Text>
+        <Text>{error}</Text>
 
         <View className="w-4/5 gap-5">
           <Text className="text-center text-cream text-3xl font-kurale">
