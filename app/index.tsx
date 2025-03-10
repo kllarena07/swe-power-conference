@@ -14,82 +14,66 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Index() {
-  const [error, setError] = useState("");
-  const [projectId, setProjectId] = useState("");
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
+function handleRegistrationError(errorMessage: string) {
+  Alert.alert(errorMessage);
+  console.error("Push notification registration error:", errorMessage);
+}
 
-  function handleRegistrationError(errorMessage: string) {
-    Alert.alert(errorMessage);
-    console.error("Push notification registration error:", errorMessage);
-    setError(errorMessage);
+async function registerForPushNotificationsAsync() {
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
   }
 
-  async function registerForPushNotificationsAsync() {
-    if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
     }
-
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        handleRegistrationError(
-          "Permission not granted to get push token for push notification!"
-        );
-        return;
-      }
-      const projectId =
-        Constants?.expoConfig?.extra?.eas?.projectId ??
-        Constants?.easConfig?.projectId;
-      if (!projectId) {
-        handleRegistrationError("Project ID not found");
-      }
-      try {
-        const pushTokenString = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId,
-          })
-        ).data;
-        return pushTokenString;
-      } catch (e) {
-        handleRegistrationError(`${e}`);
-      }
-    } else {
+    if (finalStatus !== "granted") {
       handleRegistrationError(
-        "Must use physical device for push notifications"
+        "Permission not granted to get push token for push notification!"
       );
+      return;
     }
-  }
-
-  useEffect(() => {
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
-
-    if (projectId) {
-      setProjectId(projectId);
-    } else {
-      setProjectId("No project id");
+    if (!projectId) {
+      handleRegistrationError("Project ID not found");
     }
+    try {
+      const pushTokenString = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data;
+      return pushTokenString;
+    } catch (e) {
+      handleRegistrationError(`${e}`);
+    }
+  } else {
+    handleRegistrationError("Must use physical device for push notifications");
+  }
+}
 
+export default function Index() {
+  useEffect(() => {
     (async () => {
       await registerForPushNotificationsAsync();
     })();
@@ -106,9 +90,6 @@ export default function Index() {
           className="w-full h-[200px]"
           resizeMode="contain"
         />
-
-        <Text>{projectId}</Text>
-        <Text>{error}</Text>
 
         <View className="w-4/5 gap-5">
           <Text className="text-center text-cream text-3xl font-kurale">
