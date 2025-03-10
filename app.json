@@ -23,8 +23,13 @@
         "foregroundImage": "./assets/powerappicons/ios/AppIcon~ios-marketing.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA", "android.permission.RECEIVE_BOOT_COMPLETED", "android.permission.NOTIFICATIONS"],
-      "package": "com.kllarena07.swepowerconference"
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.NOTIFICATIONS"
+      ],
+      "package": "com.kllarena07.swepowerconference",
+      "googleServiceFile": "./secrets/google-services.json"
     },
     "web": {
       "bundler": "metro",
