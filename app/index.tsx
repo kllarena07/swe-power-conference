@@ -1,5 +1,12 @@
-import { ImageBackground, Text, View, Platform, Alert } from "react-native";
-import React, { useEffect } from "react";
+import {
+  ImageBackground,
+  Text,
+  View,
+  Platform,
+  Alert,
+  Modal,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { Link } from "expo-router";
 import * as Device from "expo-device";
@@ -18,6 +25,7 @@ Notifications.setNotificationHandler({
 function handleRegistrationError(errorMessage: string) {
   Alert.alert(errorMessage);
   console.error("Push notification registration error:", errorMessage);
+  throw Error(errorMessage);
 }
 
 async function registerForPushNotificationsAsync() {
@@ -66,9 +74,15 @@ async function registerForPushNotificationsAsync() {
 }
 
 export default function Index() {
+  const [error, setError] = useState("");
+
   useEffect(() => {
     (async () => {
-      await registerForPushNotificationsAsync();
+      try {
+        await registerForPushNotificationsAsync();
+      } catch (e) {
+        setError(e);
+      }
     })();
   }, []);
 
@@ -83,6 +97,29 @@ export default function Index() {
           className="w-full h-[200px]"
           resizeMode="contain"
         />
+
+        {error !== "" && (
+          <Modal visible={true} transparent animationType="slide">
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  padding: 20,
+                  borderRadius: 10,
+                }}
+              >
+                <Text>{error}</Text>
+              </View>
+            </View>
+          </Modal>
+        )}
 
         <View className="w-4/5 gap-5">
           <Text className="text-center text-cream text-3xl font-kurale">
