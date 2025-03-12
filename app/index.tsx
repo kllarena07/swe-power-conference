@@ -1,12 +1,5 @@
-import {
-  ImageBackground,
-  Text,
-  View,
-  Platform,
-  Alert,
-  Modal,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { ImageBackground, Text, View, Platform, Alert } from "react-native";
+import React, { useEffect } from "react";
 import { Image } from "react-native";
 import { Link } from "expo-router";
 import * as Device from "expo-device";
