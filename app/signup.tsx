@@ -71,13 +71,23 @@ export default function SignUp() {
     if (!projectId) {
       handleRegistrationError("Project ID not found");
     }
+    
+    // Default to empty string for expoPushToken
+    let expoPushToken = "";
+    
+    // Try to get the push token, but continue even if it fails
     try {
-      const expoPushToken = (
+      expoPushToken = (
         await Notifications.getExpoPushTokenAsync({
           projectId,
         })
       ).data;
-
+    } catch (tokenError) {
+      console.error("Failed to get push token:", tokenError);
+      // Continue with signup process using empty token
+    }
+    
+    try {
       const { type, path, message } = await signUpAction({
         name,
         email,
