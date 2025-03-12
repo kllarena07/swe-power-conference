@@ -31,15 +31,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    const notifications = userProfiles.map((
-      { expo_push_token },
-    ) => ({
-      to: expo_push_token,
-      sound: "default",
-      body: message,
-      data: { message },
-      title: subject,
-    }));
+    const notifications = userProfiles
+      .filter(({ expo_push_token }) => expo_push_token !== "")
+      .map(({ expo_push_token }) => ({
+        to: expo_push_token,
+        sound: "default",
+        body: message,
+        data: { message },
+        title: subject,
+      }));
 
     //send notif
     const expoResponse = await fetch("https://exp.host/--/api/v2/push/send", {
