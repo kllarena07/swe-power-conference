@@ -1,8 +1,18 @@
 import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useReducer, useRef, useEffect } from "react";
-import { Alert, Button, Platform, Text, View, Linking } from "react-native";
+import React, { useReducer, useRef, useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  Linking,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -34,14 +44,18 @@ function reducer(state: State, action: Action): State {
 export default function CameraScanner() {
   const isProcessing = useRef(false);
   const scannedRef = useRef(false);
-
   const [permission, requestPermission] = useCameraPermissions();
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // State for Android prompt
+  const [isPointPromptVisible, setPointPromptVisible] = useState(false);
+  const [pointInputValue, setPointInputValue] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     // Optionally, auto-request permission if possible.
     if (permission && !permission.granted && permission.canAskAgain) {
-      // Uncomment the following line if you want to auto-trigger permission request:
+      // Uncomment the next line to auto-trigger permission request:
       // requestPermission();
     }
   }, [permission]);
@@ -59,10 +73,8 @@ export default function CameraScanner() {
   if (!permission.granted) {
     if (!permission.canAskAgain) {
       return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+        <View style={styles.centeredContainer}>
+          <Text style={styles.infoText}>
             Camera permissions have been permanently denied. Please enable them
             in your device settings.
           </Text>
@@ -71,8 +83,8 @@ export default function CameraScanner() {
       );
     }
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+      <View style={styles.centeredContainer}>
+        <Text style={styles.infoText}>
           We need your permission to show the camera.
         </Text>
         <Button onPress={requestPermission} title="Grant Permission" />
@@ -136,6 +148,7 @@ export default function CameraScanner() {
     Alert.alert("Success", `Checked in ${profile?.name || id}`, alertBtnConfig);
   };
 
+  // This function is only used on iOS.
   const showPointPrompt = (id: string) => {
     if (Platform.OS === "ios") {
       Alert.prompt(
@@ -153,8 +166,6 @@ export default function CameraScanner() {
         },
         "plain-text"
       );
-    } else {
-      Alert.alert("Feature not available. Please use iOS");
     }
   };
 
@@ -197,43 +208,30 @@ export default function CameraScanner() {
   };
 
   const handlePointAddition = async ({ id }: { id: string }) => {
-    showPointPrompt(id);
+    if (Platform.OS === "ios") {
+      showPointPrompt(id);
+    } else {
+      // For Android, show custom prompt modal.
+      setCurrentUserId(id);
+      setPointPromptVisible(true);
+    }
   };
 
   const SelectionScreen = () => (
-    <View style={{ alignItems: "center", width: "100%" }}>
-      <View style={{ gap: 5 }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
-          Select a Camera Mode
-        </Text>
+    <View style={styles.selectionContainer}>
+      <View style={styles.selectionInner}>
+        <Text style={styles.selectionTitle}>Select a Camera Mode</Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: "black",
-            padding: 16,
-            borderRadius: 6,
-            marginBottom: 10,
-          }}
+          style={styles.selectionButton}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "check-in" })}
         >
-          <Text
-            style={{ color: "white", fontWeight: "bold", textAlign: "center" }}
-          >
-            Check-In
-          </Text>
+          <Text style={styles.selectionButtonText}>Check-In</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{
-            backgroundColor: "black",
-            padding: 16,
-            borderRadius: 6,
-          }}
+          style={styles.selectionButton}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "points" })}
         >
-          <Text
-            style={{ color: "white", fontWeight: "bold", textAlign: "center" }}
-          >
-            Point Addition
-          </Text>
+          <Text style={styles.selectionButtonText}>Point Addition</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -264,15 +262,8 @@ export default function CameraScanner() {
             }
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingHorizontal: 2,
-            }}
-          >
-            <Text style={{ fontWeight: "bold", fontSize: 18, color: "white" }}>
+          <View style={styles.cameraHeader}>
+            <Text style={styles.cameraHeaderText}>
               Mode Selected: {state.cameraMode}
             </Text>
             <TouchableOpacity
@@ -290,6 +281,61 @@ export default function CameraScanner() {
     <View style={{ flex: 1, position: "relative", justifyContent: "center" }}>
       {!state.cameraMode && <SelectionScreen />}
       {state.cameraMode && <CameraScreen />}
+
+      {/* Android Custom Prompt Modal */}
+      {Platform.OS === "android" && isPointPromptVisible && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={isPointPromptVisible}
+          onRequestClose={() => {
+            setPointPromptVisible(false);
+            resetScanningFlags();
+          }}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>
+                Enter the number of points to add
+              </Text>
+              <TextInput
+                style={styles.modalInput}
+                value={pointInputValue}
+                onChangeText={setPointInputValue}
+                keyboardType="numeric"
+                placeholder="0"
+              />
+              <View style={styles.modalButtons}>
+                <Button
+                  title="Cancel"
+                  onPress={() => {
+                    setPointPromptVisible(false);
+                    setPointInputValue("");
+                    resetScanningFlags();
+                  }}
+                />
+                <Button
+                  title="Submit"
+                  onPress={() => {
+                    const number = parseFloat(pointInputValue);
+                    if (isNaN(number) || number < 0) {
+                      Alert.alert(
+                        "Invalid Input",
+                        "Please enter a nonnegative number!"
+                      );
+                    } else if (currentUserId) {
+                      addPoints(currentUserId, number);
+                      setPointPromptVisible(false);
+                      setPointInputValue("");
+                    }
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+
       <View
         style={{
           position: "absolute",
@@ -303,3 +349,82 @@ export default function CameraScanner() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  infoText: {
+    textAlign: "center",
+    paddingBottom: 10,
+  },
+  selectionContainer: {
+    alignItems: "center",
+    width: "100%",
+  },
+  selectionInner: {
+    gap: 5,
+    marginTop: 20,
+  },
+  selectionTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  selectionButton: {
+    backgroundColor: "black",
+    padding: 16,
+    borderRadius: 6,
+    marginBottom: 10,
+    width: "80%",
+  },
+  selectionButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  cameraHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 2,
+    marginTop: 10,
+  },
+  cameraHeaderText: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "white",
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 5,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+});
