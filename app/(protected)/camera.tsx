@@ -1,8 +1,8 @@
 import { supabase } from "@/utils/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useReducer, useRef } from "react";
-import { Alert, Button, Platform, Text, View } from "react-native";
+import { useReducer, useRef, useEffect } from "react";
+import { Alert, Button, Platform, Text, View, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -38,21 +38,44 @@ export default function CameraScanner() {
   const [permission, requestPermission] = useCameraPermissions();
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    // Optionally, auto-request permission if possible.
+    if (permission && !permission.granted && permission.canAskAgain) {
+      // Uncomment the following line if you want to auto-trigger permission request:
+      // requestPermission();
+    }
+  }, [permission]);
+
   if (!permission) {
     return (
       <SafeAreaView>
-        <Text>Attempting to get the user's permission for camera access.</Text>
+        <Text>
+          Attempting to get the user's permission for camera access...
+        </Text>
       </SafeAreaView>
     );
   }
 
   if (!permission.granted) {
+    if (!permission.canAskAgain) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+            Camera permissions have been permanently denied. Please enable them
+            in your device settings.
+          </Text>
+          <Button title="Open Settings" onPress={Linking.openSettings} />
+        </View>
+      );
+    }
     return (
-      <View className="flex-1 justify-center">
-        <Text className="text-center pb-2.5">
-          We need your permission to show the camera
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+          We need your permission to show the camera.
         </Text>
-        <Button onPress={requestPermission} title="grant permission" />
+        <Button onPress={requestPermission} title="Grant Permission" />
       </View>
     );
   }
@@ -178,23 +201,25 @@ export default function CameraScanner() {
   };
 
   const SelectionScreen = () => (
-    <View
-      className="w-full items-center"
-      style={{
-        display: state.cameraMode ? "none" : "flex",
-      }}
-    >
-      <View className="gap-5">
-        <Text className="text-3xl font-bold">Select a Camera Mode</Text>
+    <View style={{ alignItems: "center", width: "100%" }}>
+      <View style={{ gap: 5 }}>
+        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
+          Select a Camera Mode
+        </Text>
         <TouchableOpacity
           style={{
             backgroundColor: "black",
             padding: 16,
             borderRadius: 6,
+            marginBottom: 10,
           }}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "check-in" })}
         >
-          <Text className="text-white font-bold text-center">Check-In</Text>
+          <Text
+            style={{ color: "white", fontWeight: "bold", textAlign: "center" }}
+          >
+            Check-In
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -204,7 +229,9 @@ export default function CameraScanner() {
           }}
           onPress={() => dispatch({ type: "OPEN_CAMERA", mode: "points" })}
         >
-          <Text className="text-white font-bold text-center">
+          <Text
+            style={{ color: "white", fontWeight: "bold", textAlign: "center" }}
+          >
             Point Addition
           </Text>
         </TouchableOpacity>
@@ -213,15 +240,11 @@ export default function CameraScanner() {
   );
 
   const CameraScreen = () => (
-    <View
-      style={{ display: state.cameraMode ? "flex" : "none" }}
-      className="bg-black items-center justify-center"
-    >
-      <SafeAreaView className="w-full h-full px-5">
+    <View style={{ flex: 1, backgroundColor: "black" }}>
+      <SafeAreaView style={{ flex: 1, paddingHorizontal: 5 }}>
         <CameraView
           style={{ flex: 1 }}
           facing="back"
-          className="relative"
           barcodeScannerSettings={{
             barcodeTypes: ["qr"],
           }}
@@ -241,8 +264,15 @@ export default function CameraScanner() {
             }
           }}
         >
-          <View className="flex flex-row justify-between items-center px-2">
-            <Text className="font-bold text-lg text-white">
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 2,
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 18, color: "white" }}>
               Mode Selected: {state.cameraMode}
             </Text>
             <TouchableOpacity
@@ -257,10 +287,19 @@ export default function CameraScanner() {
   );
 
   return (
-    <View className="relative flex-1 justify-center">
-      <SelectionScreen />
-      <CameraScreen />
-      <View className="absolute bottom-0 right-[20%] bg-[hsla(278,41%,74%,1)] w-1/5 h-[1.5px]" />
+    <View style={{ flex: 1, position: "relative", justifyContent: "center" }}>
+      {!state.cameraMode && <SelectionScreen />}
+      {state.cameraMode && <CameraScreen />}
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: "20%",
+          backgroundColor: "hsla(278,41%,74%,1)",
+          width: "20%",
+          height: 1.5,
+        }}
+      />
     </View>
   );
 }
